@@ -1,0 +1,21 @@
+- Server side -
+Username need to view account balance
+Implement transfers (server side)
+   view list of users to send bucks to
+   cannot send money to self
+   includes userIds for both to- and from- users
+   receiver balance increased by transfer amount
+   sender balance decreased by transfer amount
+   sencer balance cannot become negative as a result of transfer
+   can't send 0 or negative amount
+   needs approval message/status
+
+
+- Client side -
+Create menu methods in App
+    viewCurrentBalance()
+    viewTransferHistory()
+    viewPendingRequests()
+    sendBucks()
+    requestBucks()
+need to view transfer history

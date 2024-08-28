@@ -1,9 +1,17 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class App {
 
@@ -13,6 +21,8 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
+    private static final String LOG_FILE = "Log.txt";
+    private AccountService accountService = new AccountService();
 
     public static void main(String[] args) {
         App app = new App();
@@ -23,6 +33,7 @@ public class App {
         consoleService.printGreeting();
         loginMenu();
         if (currentUser != null) {
+            accountService.setToken(currentUser.getToken());
             mainMenu();
         }
     }
@@ -86,6 +97,9 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
+        double balance = accountService.getBalance(Account.getUserId());
+
+        System.out.println(balance);
 		
 	}
 
@@ -108,5 +122,21 @@ public class App {
 		// TODO Auto-generated method stub
 		
 	}
+    //The following method can be called to make a log of a transfer
+    private void logChange(String action, double amount, double newBalance) {
+        // Establish date and time
+        LocalDateTime now = LocalDateTime.now();
+        // Format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+        // Combine
+        String timeStamp = now.format(formatter);
+        // Log entry variable
+        String logEntry = String.format("%s %s: $%.2f $%.2f\n", timeStamp, action, amount, newBalance);
 
+        try (PrintWriter output = new PrintWriter(new FileWriter(LOG_FILE, true))){
+            output.print(logEntry);
+        } catch (IOException e) {
+            System.out.println("Error in log file creation.");
+        }
+    }
 }
