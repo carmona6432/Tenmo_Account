@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import javax.sql.RowSet;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 @Component
 public class JdbcAccountDAO implements AccountDAO {
@@ -37,8 +38,25 @@ public class JdbcAccountDAO implements AccountDAO {
         }
         return balance;
     }
-    
-    
+
+    @Override
+    public List<String> getAccounts(int id) {
+        List<String> accounts = new ArrayList<>();
+        String sql = "SELECT username FROM tenmo_user " +
+                "WHERE user_id != ?;";
+        SqlRowSet results = template.queryForRowSet(sql,id);
+        try{
+        while (results.next()){
+            accounts.add(results.getString("username"));
+        }} catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Problem connecting");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Data problems");
+        }
+        return accounts;
+
+    }
+
 
     private Account mapRowToAccount (SqlRowSet sqlRowSet) {
         Account account = new Account();
