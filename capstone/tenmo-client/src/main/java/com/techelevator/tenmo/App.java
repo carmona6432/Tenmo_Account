@@ -96,10 +96,9 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
-        double balance = accountService.getBalance(Account.getUserId());
-
-        System.out.println(balance);
+        int id = consoleService.promptForInt("What is user id?");
+        double balance = accountService.getBalance(id);
+        System.out.println("The current balance for " + id + " is $" + balance);
 		
 	}
 

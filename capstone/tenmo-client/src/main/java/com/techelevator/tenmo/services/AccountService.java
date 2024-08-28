@@ -15,7 +15,7 @@ public class AccountService {
     public void setToken(String token) {
         this.token = token;
     }
-    public Account getBalance(int id) {
+    public double getBalance(int id) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
@@ -24,6 +24,6 @@ public class AccountService {
          return restTemplate.exchange(API_BASE_URL + "accounts/" + id,
                  HttpMethod.GET,
                  entity,
-                 Account.class).getBody();
+                 Double.class).getBody();
     }
 }
