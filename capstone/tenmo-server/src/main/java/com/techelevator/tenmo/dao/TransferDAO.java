@@ -2,10 +2,16 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
 
+import java.util.List;
+
 public interface TransferDAO {
 
     public Transfer getTransfer();
-    public void updateToUser(); //Updates balance
-    public void updateFromUser(); //Updates balance
-
+    List<Transfer> getTransfersById(int userId);
+    Transfer getTransferByTransferId(int transferId);
+    List<Transfer> getPendingTransfersById(int userId);
+    void updateTransfer(Transfer transfer);
+    void createTransfer(Transfer transfer);
+    
+    //May need a get all method
 }

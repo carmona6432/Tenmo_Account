@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import javax.sql.RowSet;
+import java.math.BigDecimal;
 import java.util.List;
 @Component
 public class JdbcAccountDAO implements AccountDAO {
@@ -18,14 +20,14 @@ public class JdbcAccountDAO implements AccountDAO {
         template = new JdbcTemplate(ds);
     }
     @Override
-    public double getBalance(int id) {
-        double balance = 0.0;
+    public BigDecimal getBalance(int id) {
+        BigDecimal balance = BigDecimal.valueOf(0.00);
         String sql = "SELECT balance FROM account WHERE user_id = ?;";
         try {
             SqlRowSet results = template.queryForRowSet(sql, id);
 
             if(results.next()) {
-                balance = results.getDouble("balance");
+                balance = results.getBigDecimal("balance");
             }
 
         } catch (CannotGetJdbcConnectionException e) {
@@ -35,9 +37,14 @@ public class JdbcAccountDAO implements AccountDAO {
         }
         return balance;
     }
+    
+    
 
-    @Override
-    public List<Account> getUsers() {
-        return null;
+    private Account mapRowToAccount (SqlRowSet sqlRowSet) {
+        Account account = new Account();
+        account.setAccountId(sqlRowSet.getInt("account_id"));
+        account.setBalance(sqlRowSet.getBigDecimal("balance"));
+        account.setUserId(sqlRowSet.getInt("user_id"));
+        return account;
     }
 }

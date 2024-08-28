@@ -7,6 +7,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+
 public class AccountService {
 
     private String token;
@@ -15,7 +17,7 @@ public class AccountService {
     public void setToken(String token) {
         this.token = token;
     }
-    public double getBalance(int id) {
+    public BigDecimal getBalance(int id) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
@@ -24,6 +26,6 @@ public class AccountService {
          return restTemplate.exchange(API_BASE_URL + "accounts/" + id,
                  HttpMethod.GET,
                  entity,
-                 Double.class).getBody();
+                 BigDecimal.class).getBody();
     }
 }

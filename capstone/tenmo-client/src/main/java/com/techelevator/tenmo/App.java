@@ -2,6 +2,7 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -10,6 +11,7 @@ import com.techelevator.tenmo.services.ConsoleService;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -96,9 +98,9 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-        int id = consoleService.promptForInt("What is user id?");
-        double balance = accountService.getBalance(id);
-        System.out.println("The current balance for " + id + " is $" + balance);
+        int id = currentUser.getUser().getId();
+        BigDecimal balance = accountService.getBalance(id);
+        System.out.println("The current balance for " + currentUser.getUser().getUsername() + " is $" + balance);
 		
 	}
 

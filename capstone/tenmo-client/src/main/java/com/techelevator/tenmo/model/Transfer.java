@@ -1,7 +1,5 @@
 package com.techelevator.tenmo.model;
 
-import com.techelevator.tenmo.dao.TransferDAO;
-
 import java.math.BigDecimal;
 
 public class Transfer {
