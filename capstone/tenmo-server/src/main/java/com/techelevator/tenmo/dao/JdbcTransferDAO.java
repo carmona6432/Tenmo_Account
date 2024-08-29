@@ -5,7 +5,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import javax.xml.transform.TransformerFactory;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcTransferDAO implements TransferDAO {
@@ -14,6 +17,8 @@ public class JdbcTransferDAO implements TransferDAO {
     public JdbcTransferDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+
 
     @Override
     public Transfer getTransfer() {
@@ -32,6 +37,19 @@ public class JdbcTransferDAO implements TransferDAO {
 
     @Override
     public List<Transfer> getPendingTransfersById(int userId) {
+        List<Transfer> pendingTransfers =new ArrayList<>();
+        String sql = "SELECT transfer_id, tu.username, amount FROM transfer ts " +
+                "JOIN account ac ON ac.account_id = ts.account_to " +
+                "JOIN tenmo_user tu ON tu.user_id = ac.user_id " +
+                "WHERE ts.account_from = ? " +
+                "AND transfer_status_id = 1;";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+
+            while (results.next()){
+                Transfer transfer = mapRowToTransfer
+            }
+        }
         return null;
     }
 
