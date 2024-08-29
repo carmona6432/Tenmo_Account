@@ -4,7 +4,6 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.TransferStatusDAO;
 import com.techelevator.tenmo.dao.TransferTypeDAO;
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferStatus;
 import com.techelevator.tenmo.model.TransferType;
@@ -43,14 +42,14 @@ public class AppController {
     }
 
     @GetMapping(path = "transfer/from")
-            public List<Transfer> getTransferFromAccount (Principal user) {
+            public List<Transfer> getTransfersFromAccount (Principal user) {
         String username = user.getName();
-        return transferDAO.getTransferFromAccount(username);
+        return transferDAO.getTransfersFromAccount(username);
     }
     @GetMapping(path = "transfer/to")
-    public List<Transfer> getTransferToAccount (Principal user) {
+    public List<Transfer> getTransfersToAccount (Principal user) {
         String username = user.getName();
-        return transferDAO.getTransferToAccount(username);
+        return transferDAO.getTransfersToAccount(username);
     }
     @GetMapping(path="/transfertype/sort")
     public TransferType getTransferTypeByDescription(@RequestParam String description) {
