@@ -1,11 +1,9 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +17,6 @@ public class JdbcTransferDAO implements TransferDAO {
     public JdbcTransferDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
     @Override
     public List<Transfer> getTransferFromAccount(String username) {
         List<Transfer> transfers = new ArrayList<>();
@@ -63,8 +60,23 @@ public class JdbcTransferDAO implements TransferDAO {
 
     @Override
     public Transfer getTransferByTransferId(int transferId) {
+        Transfer transfer = null;
 
-        return null;
+        String sql = "SELECT * FROM transfer WHERE transfer_id = ?;";
+
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+
+            if(results.next()) {
+                transfer = mapRowToTransfer(results);
+            }
+
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Problem connecting");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Data problems");
+        }
+        return transfer;
     }
 
     @Override
