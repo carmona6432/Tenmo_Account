@@ -7,9 +7,12 @@ import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class JdbcTransferDAO implements TransferDAO {
     private JdbcTemplate jdbcTemplate;
 
@@ -17,24 +20,39 @@ public class JdbcTransferDAO implements TransferDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
-
     @Override
-    public Transfer getTransfer() {
-        return null;
-    }
-
-    @Override
-    public List<Transfer> getTransfersById(int accountId) {
+    public List<Transfer> getTransferFromAccount(String username) {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "select * from transfer " +
+        String sql = "select transfer_id, account_to, amount from transfer " +
+                "JOIN account ON transfer.account_from = account.account_id " +
+                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id" +
                 "where transfer_type_id = 2 " +
-                "and account_from = ? or account_to = ?;";
+                "and username = ?;";
         try{
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, username);
         while (results.next()) {
             transfers.add(mapRowToTransfer(results));
         }
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Problem connecting");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Data problems");
+        }
+        return transfers;
+    }
+    @Override
+    public List<Transfer> getTransferToAccount(String username){
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "select transfer_id, account_from, amount from transfer " +
+                "JOIN account ON transfer.account_to = account.account_id " +
+                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id" +
+                "where transfer_type_id = 2 " +
+                "and username = ?;";
+        try{
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, username);
+            while (results.next()) {
+                transfers.add(mapRowToTransfer(results));
+            }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
         } catch (DataIntegrityViolationException e) {
@@ -55,7 +73,7 @@ public class JdbcTransferDAO implements TransferDAO {
         String sql = "SELECT transfer_id, tu.username, amount FROM transfer ts " +
                 "JOIN account ac ON ac.account_id = ts.account_to " +
                 "JOIN tenmo_user tu ON tu.user_id = ac.user_id " +
-                "WHERE ts.account_from = ? " +
+                "WHERE username = ? " +
                 "AND transfer_status_id = 1;";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);

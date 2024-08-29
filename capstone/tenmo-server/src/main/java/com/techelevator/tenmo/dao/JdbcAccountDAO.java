@@ -21,11 +21,13 @@ public class JdbcAccountDAO implements AccountDAO {
         template = new JdbcTemplate(ds);
     }
     @Override
-    public BigDecimal getBalance(int id) {
+    public BigDecimal getBalance(String username) {
         BigDecimal balance = BigDecimal.valueOf(0.00);
-        String sql = "SELECT balance FROM account WHERE user_id = ?;";
+        String sql = "SELECT balance FROM account " +
+                "JOIN tenmo_user on account.user_id = tenmo_user.user_id " +
+                "WHERE username = ?;";
         try {
-            SqlRowSet results = template.queryForRowSet(sql, id);
+            SqlRowSet results = template.queryForRowSet(sql, username);
 
             if(results.next()) {
                 balance = results.getBigDecimal("balance");

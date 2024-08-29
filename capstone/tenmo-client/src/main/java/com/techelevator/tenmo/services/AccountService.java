@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,15 +18,39 @@ public class AccountService {
     public void setToken(String token) {
         this.token = token;
     }
-    public BigDecimal getBalance(int id) {
+    public BigDecimal getBalance() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
 
         HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-         return restTemplate.exchange(API_BASE_URL + "accounts/" + id,
+         return restTemplate.exchange(API_BASE_URL + "/balance",
                  HttpMethod.GET,
                  entity,
                  BigDecimal.class).getBody();
+    }
+    public Transfer[] getTransferFromAccount () {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
+
+        return restTemplate.exchange(API_BASE_URL + "transfer/from",
+                HttpMethod.GET,
+                entity,
+                Transfer[].class).getBody();}
+
+    public  Transfer[] getTransferToAccount(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
+
+        return restTemplate.exchange(API_BASE_URL + "transfer/to",
+                HttpMethod.GET,
+                entity,
+                Transfer[].class).getBody();
     }
 }

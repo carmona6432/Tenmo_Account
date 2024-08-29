@@ -1,9 +1,6 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.User;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
@@ -98,15 +95,24 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-        int id = currentUser.getUser().getId();
-        BigDecimal balance = accountService.getBalance(id);
+        BigDecimal balance = accountService.getBalance();
         System.out.println("The current balance for " + currentUser.getUser().getUsername() + " is $" + balance);
 		
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+		int code = consoleService.promptForInt("1. View Transaction from Friends" + "\n" + "2. View Transaction To Friends");
+        if(code == 1){
+            Transfer[] transfers = accountService.getTransferToAccount();
+            for(Transfer transfer: transfers){
+                System.out.println("Transfer Id: " + transfer.getId() + " From:" + transfer.getAccountFrom() + "for $" + transfer.getAmount() + "\n");
+            }
+        } else if(code == 2){
+            Transfer[] transfers = accountService.getTransferFromAccount();
+            for(Transfer transfer: transfers){
+                System.out.println("Transfer Id: " + transfer.getId() + " To:" + transfer.getAccountTo() + "for $" + transfer.getAmount() + "\n");
+            }
+        }
 	}
 
 	private void viewPendingRequests() {

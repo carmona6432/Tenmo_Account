@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
@@ -18,15 +19,28 @@ import java.util.List;
 public class AppController {
     @Autowired
     private AccountDAO accountDAO;
+    @Autowired
     private TransferDAO transferDAO;
 
-    @GetMapping(path = "accounts/{id}")
-    public BigDecimal getBalance(@PathVariable int id) {
-        return accountDAO.getBalance(id);
+    @GetMapping(path = "balance")
+    public BigDecimal getBalance(Principal user) {
+        String username = user.getName();
+        return accountDAO.getBalance(username);
     }
 
     @GetMapping(path = "accounts/user/{id}")
     public List<String> accounts(@PathVariable int id){
         return accountDAO.getAccounts(id);
+    }
+
+    @GetMapping(path = "transfer/from")
+            public List<Transfer> getTransferFromAccount (Principal user) {
+        String username = user.getName();
+        return transferDAO.getTransferFromAccount(username);
+    }
+    @GetMapping(path = "transfer/to")
+    public List<Transfer> getTransferToAccount (Principal user) {
+        String username = user.getName();
+        return transferDAO.getTransferToAccount(username);
     }
 }
