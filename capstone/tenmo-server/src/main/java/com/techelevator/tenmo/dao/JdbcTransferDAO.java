@@ -18,7 +18,7 @@ public class JdbcTransferDAO implements TransferDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
     @Override
-    public List<Transfer> getTransferFromAccount(String username) {
+    public List<Transfer> getTransfersFromAccount(String username) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "select transfer_id, account_to, amount from transfer " +
                 "JOIN account ON transfer.account_from = account.account_id " +
@@ -38,7 +38,7 @@ public class JdbcTransferDAO implements TransferDAO {
         return transfers;
     }
     @Override
-    public List<Transfer> getTransferToAccount(String username){
+    public List<Transfer> getTransfersToAccount(String username){
         List<Transfer> transfers = new ArrayList<>();
         String sql = "select transfer_id, account_from, amount from transfer " +
                 "JOIN account ON transfer.account_to = account.account_id " +

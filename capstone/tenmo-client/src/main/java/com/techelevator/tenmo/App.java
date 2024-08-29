@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -103,12 +104,12 @@ public class App {
 	private void viewTransferHistory() {
 		int code = consoleService.promptForInt("1. View Transaction from Friends" + "\n" + "2. View Transaction To Friends");
         if(code == 1){
-            Transfer[] transfers = accountService.getTransferToAccount();
+            Transfer[] transfers = accountService.getTransfersToAccount();
             for(Transfer transfer: transfers){
                 System.out.println("Transfer Id: " + transfer.getId() + " From:" + transfer.getAccountFrom() + "for $" + transfer.getAmount() + "\n");
             }
         } else if(code == 2){
-            Transfer[] transfers = accountService.getTransferFromAccount();
+            Transfer[] transfers = accountService.getTransfersFromAccount();
             for(Transfer transfer: transfers){
                 System.out.println("Transfer Id: " + transfer.getId() + " To:" + transfer.getAccountTo() + "for $" + transfer.getAmount() + "\n");
             }
@@ -116,6 +117,12 @@ public class App {
 	}
 
 	private void viewPendingRequests() {
+        Transfer[] pendingRequests = accountService.getPendingRequest();
+        for(Transfer request : pendingRequests) {
+            System.out.println(request.getId() + " " +
+                    //+ request.getAccountTo().getUsername() +
+                    " $" + request.getAmount());
+        }
 		// TODO Auto-generated method stub
 		
 	}

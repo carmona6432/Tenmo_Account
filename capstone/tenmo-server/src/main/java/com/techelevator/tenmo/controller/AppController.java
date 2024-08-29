@@ -2,7 +2,6 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,13 +33,13 @@ public class AppController {
     }
 
     @GetMapping(path = "transfer/from")
-            public List<Transfer> getTransferFromAccount (Principal user) {
+            public List<Transfer> getTransfersFromAccount (Principal user) {
         String username = user.getName();
-        return transferDAO.getTransferFromAccount(username);
+        return transferDAO.getTransfersFromAccount(username);
     }
     @GetMapping(path = "transfer/to")
-    public List<Transfer> getTransferToAccount (Principal user) {
+    public List<Transfer> getTransfersToAccount (Principal user) {
         String username = user.getName();
-        return transferDAO.getTransferToAccount(username);
+        return transferDAO.getTransfersToAccount(username);
     }
 }
