@@ -1,13 +1,12 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-import javax.xml.transform.TransformerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +25,27 @@ public class JdbcTransferDAO implements TransferDAO {
     }
 
     @Override
-    public List<Transfer> getTransfersById(int userId) {
-        return null;
+    public List<Transfer> getTransfersById(int accountId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "select * from transfer " +
+                "where transfer_type_id = 2 " +
+                "and account_from = ? or account_to = ?;";
+        try{
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        while (results.next()) {
+            transfers.add(mapRowToTransfer(results));
+        }
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Problem connecting");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Data problems");
+        }
+        return transfers;
     }
 
     @Override
     public Transfer getTransferByTransferId(int transferId) {
+
         return null;
     }
 
@@ -47,10 +61,15 @@ public class JdbcTransferDAO implements TransferDAO {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
 
             while (results.next()){
-                Transfer transfer = mapRowToTransfer
+                Transfer transfer = mapRowToTransfer(results);
+                pendingTransfers.add(transfer);
             }
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Problem connecting");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Data problems");
         }
-        return null;
+        return pendingTransfers;
     }
 
     @Override
@@ -70,5 +89,16 @@ public class JdbcTransferDAO implements TransferDAO {
         } catch (DataIntegrityViolationException e) {
             System.out.println("Data Problem");
         }
+    }
+
+    private Transfer mapRowToTransfer(SqlRowSet sqlRowSet) {
+        Transfer transfer = new Transfer();
+        transfer.setId(sqlRowSet.getInt("transfer_id"));
+        transfer.setTransferTypeId(sqlRowSet.getInt("transfer_type_id"));
+        transfer.setTransferStatusId(sqlRowSet.getInt("transfer_status_id"));
+        transfer.setAccountFrom(sqlRowSet.getInt("account_from"));
+        transfer.setAccountTo(sqlRowSet.getInt("account_to"));
+        transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
+        return transfer;
     }
 }

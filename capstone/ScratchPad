@@ -1,5 +1,4 @@
 - Server side -
-Username need to view account balance
 Implement transfers (server side)
    view list of users to send bucks to
    cannot send money to self
@@ -13,7 +12,6 @@ Implement transfers (server side)
 
 - Client side -
 Create menu methods in App
-    viewCurrentBalance()
     viewTransferHistory()
     viewPendingRequests()
     sendBucks()
