@@ -8,8 +8,6 @@ public interface TransferDAO {
 
     List<Transfer> getTransferFromAccount(String username);
     List<Transfer> getTransferToAccount(String username);
-
-    Transfer getTransferByTransferId(int transferId);
     List<Transfer> getPendingTransfersById(int userId);
     void updateTransfer(Transfer transfer);
     void createTransfer(Transfer transfer);

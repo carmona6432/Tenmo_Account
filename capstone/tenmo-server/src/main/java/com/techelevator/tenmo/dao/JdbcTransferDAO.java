@@ -59,27 +59,6 @@ public class JdbcTransferDAO implements TransferDAO {
     }
 
     @Override
-    public Transfer getTransferByTransferId(int transferId) {
-        Transfer transfer = null;
-
-        String sql = "SELECT * FROM transfer WHERE transfer_id = ?;";
-
-        try {
-            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
-
-            if(results.next()) {
-                transfer = mapRowToTransfer(results);
-            }
-
-        } catch (CannotGetJdbcConnectionException e) {
-            System.out.println("Problem connecting");
-        } catch (DataIntegrityViolationException e) {
-            System.out.println("Data problems");
-        }
-        return transfer;
-    }
-
-    @Override
     public List<Transfer> getPendingTransfersById(int userId) {
         List<Transfer> pendingTransfers =new ArrayList<>();
         String sql = "SELECT transfer_id, tu.username, amount FROM transfer ts " +
