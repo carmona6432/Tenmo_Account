@@ -4,11 +4,6 @@ public class TransferType {
     private int transferTypeId;
     private String transferTypeDescription;
 
-    public TransferType(int transferTypeId, String transferTypeDescription) {
-        this.transferTypeId = transferTypeId;
-        this.transferTypeDescription = transferTypeDescription;
-    }
-
     public int getTransferTypeId() {
         return transferTypeId;
     }
