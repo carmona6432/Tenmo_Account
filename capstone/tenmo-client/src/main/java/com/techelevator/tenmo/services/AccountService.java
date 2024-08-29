@@ -53,7 +53,7 @@ public class AccountService {
                 Transfer[].class).getBody();
     }
 
-    public Transfer[] getPendingRequest(){
+    public Transfer[] getPendingRequests(){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
