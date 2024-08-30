@@ -104,6 +104,10 @@ public class JdbcTransferDAO implements TransferDAO {
 
         @Override
         public void updateTransfer (Transfer transfer){
+            String sql = "UPDATE transfers " +
+                    "SET transfer_status_id = ?" +
+                    "WHERE transfer_id = ?;";
+            jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getId());
         }
 
         @Override
