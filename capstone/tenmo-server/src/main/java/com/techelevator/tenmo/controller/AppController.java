@@ -43,9 +43,10 @@ public class AppController {
         return accountDAO.getBalance(username);
     }
 
-    @GetMapping(path = "accounts/user/{id}")
-    public List<String> accounts(@PathVariable int id){
-        return accountDAO.getAccounts(id);
+    @GetMapping(path = "accounts/users")
+    public List<Account> accounts(Principal user){
+        String username = user.getName();
+        return accountDAO.getAccounts(username);
     }
 
     @GetMapping(path = "transfer/from/{id}")
