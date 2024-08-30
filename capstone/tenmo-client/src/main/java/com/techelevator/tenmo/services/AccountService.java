@@ -38,7 +38,7 @@ public class AccountService {
         }
         return bigD;
     }
-    public Account[] getAccounts(String username) {
+    public Account[] getAccounts() {
         Account[] accounts = new Account[0];
         try {
             accounts = restTemplate.exchange(API_BASE_URL + "accounts/users",

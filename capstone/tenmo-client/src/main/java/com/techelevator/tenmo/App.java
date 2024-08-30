@@ -138,12 +138,16 @@ public class App {
                 "ID          Name\n" +
                 "-------------------------------------------");
         //Print available users and user Ids
-        
+        System.out.println(accountService.getAccounts());
         String username = consoleService.promptForString("Please Enter Recipient Username: ");
 //        Account recipientAccount = accountService.getAccountByUsername(username);
 //        if (recipientAccount == null) {
 //            System.out.println("Recipient not found.");
 //            return;
+//        if (recipientAccount == currentUser.getUser().getUsername()) {
+//            System.out.println("Can't send money to yourself Dumb Dumb.");
+//            return;
+//        }
 
         BigDecimal balance = accountService.getAccount().getBalance();
         System.out.println("-------------------------------------------");
@@ -166,9 +170,6 @@ public class App {
 //        } else {
 //            System.out.println("Transfer failed.");
 //        }
-
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void requestBucks() {
