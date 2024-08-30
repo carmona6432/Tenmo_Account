@@ -23,69 +23,25 @@ public class AccountService {
         this.token = token;
     }
     public BigDecimal getBalance() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setBearerAuth(token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-         return restTemplate.exchange(API_BASE_URL + "balance",
-                 HttpMethod.GET,
-                 entity,
-                 BigDecimal.class).getBody();
+        BigDecimal bigD = null;
+        try {
+            bigD =  restTemplate.exchange(API_BASE_URL + "balance",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    BigDecimal.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return bigD;
     }
     public Account getAccount(){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-        return restTemplate.exchange(API_BASE_URL + "account",
-                HttpMethod.GET,
-                entity,
-                Account.class).getBody();
-    }
-    public TransferUsername[] getTransfersFromAccount(int id) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setBearerAuth(token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-
-        return restTemplate.exchange(API_BASE_URL + "transfer/from/" + id,
-                HttpMethod.GET,
-                entity,
-                TransferUsername[].class).getBody();}
-
-    public TransferUsername[] getTransfersToAccount(int id){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setBearerAuth(token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-
-        return restTemplate.exchange(API_BASE_URL + "transfer/to/" + id,
-                HttpMethod.GET,
-                entity,
-                TransferUsername[].class).getBody();
-    }
-
-    public TransferUsername[] getPendingRequests(int id){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setBearerAuth(token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-
-        return restTemplate.exchange(API_BASE_URL + "transfer/pending/" + id,
-                HttpMethod.GET, entity, TransferUsername[].class).getBody();
-
-    }
-
-    public Account getAccountByUserId(AuthenticatedUser authenticatedUser, int userId) {
         Account account = null;
         try {
-            account = restTemplate.exchange(API_BASE_URL + "account/user/" + userId,
+            account = restTemplate.exchange(API_BASE_URL + "account",
                     HttpMethod.GET,
-                    makeEntity(authenticatedUser),
+                    makeAuthEntity(),
                     Account.class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
@@ -94,10 +50,68 @@ public class AccountService {
         }
         return account;
     }
-    private HttpEntity makeEntity(AuthenticatedUser authenticatedUser) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(authenticatedUser.getToken());
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
-        return httpEntity;
+    public TransferUsername[] getTransfersFromAccount(int id) {
+        TransferUsername[] transferUsername = null;
+        try {
+            transferUsername =  restTemplate.exchange(API_BASE_URL + "transfer/from/" + id,
+                HttpMethod.GET,
+                makeAuthEntity(),
+                TransferUsername[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferUsername;
+    }
+
+    public TransferUsername[] getTransfersToAccount(int id){
+        TransferUsername[] transferUsername = null;
+        try {
+           transferUsername = restTemplate.exchange(API_BASE_URL + "transfer/to/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    TransferUsername[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferUsername;
+    }
+
+    public TransferUsername[] getPendingRequests(int id){
+        TransferUsername[] transferUsername = null;
+        try {
+            transferUsername = restTemplate.exchange(API_BASE_URL + "transfer/pending/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    TransferUsername[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferUsername;
+    }
+
+    public Account getAccountByUserId(int userId) {
+        Account account = null;
+        try {
+            account = restTemplate.exchange(API_BASE_URL + "account/user/" + userId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Account.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return account;
+    }
+    private HttpEntity<Void> makeAuthEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(headers);
     }
 }
