@@ -26,7 +26,7 @@ public class TransferService {
         Transfer transfer = null;
         try {
             transfer = restTemplate.exchange(
-                    API_BASE_URL + "transfer",
+                    API_BASE_URL + "transfers",
                     HttpMethod.POST,
                     makeAuthEntity(),
                     Transfer.class
@@ -42,10 +42,10 @@ public class TransferService {
         boolean isUpdated = false;
         try {
             restTemplate.put(API_BASE_URL +
-                    "transfers/" +
-                    transfer.getId(),
-                    makeAuthEntity());
-            isUpdated = true;
+                "transfers/" +
+                transfer.getId(),
+                makeAuthEntity());
+                isUpdated = true;
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -58,6 +58,5 @@ public class TransferService {
         headers.setBearerAuth(token);
         return new HttpEntity<>(headers);
     }
-
 
 }
