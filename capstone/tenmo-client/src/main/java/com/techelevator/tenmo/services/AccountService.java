@@ -3,10 +3,13 @@ package com.techelevator.tenmo.services;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferUsername;
+import com.techelevator.tenmo.model.login.AuthenticatedUser;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -76,5 +79,24 @@ public class AccountService {
                 HttpMethod.GET, entity, TransferUsername[].class).getBody();
 
     }
-
+    public Account getAccountByUserId(AuthenticatedUser authenticatedUser, int userId) {
+        Account account = null;
+        try {
+            account = restTemplate.exchange(API_BASE_URL + "account/user/" + userId,
+                    HttpMethod.GET,
+                    makeEntity(authenticatedUser),
+                    Account.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return account;
+    }
+    private HttpEntity makeEntity(AuthenticatedUser authenticatedUser) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(authenticatedUser.getToken());
+        HttpEntity httpEntity = new HttpEntity(httpHeaders);
+        return httpEntity;
+    }
 }
