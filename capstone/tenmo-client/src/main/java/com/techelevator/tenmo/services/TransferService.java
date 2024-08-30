@@ -38,7 +38,21 @@ public class TransferService {
         }
         return transfer;
     }
-
+    public boolean updateTransfer(Transfer transfer) {
+        boolean isUpdated = false;
+        try {
+            restTemplate.put(API_BASE_URL +
+                    "transfers/" +
+                    transfer.getId(),
+                    makeAuthEntity());
+            isUpdated = true;
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return isUpdated;
+    }
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);

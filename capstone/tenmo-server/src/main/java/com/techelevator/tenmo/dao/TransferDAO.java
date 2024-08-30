@@ -8,10 +8,8 @@ import java.util.List;
 public interface TransferDAO {
     List<TransferUsername> getTransfersFromAccount(int accountId);
     List<TransferUsername> getTransfersToAccount(int accountId);
-    public Transfer getTransferByTransferId(int transferId);
+    Transfer getTransferByTransferId(int transferId);
     List<TransferUsername> getPendingTransfersById(int userId);
-    void updateTransfer(Transfer transfer);
+    Transfer updateTransfer(Transfer transfer);
     void createTransfer(Transfer transfer);
-    
-    //May need a get all method
 }
