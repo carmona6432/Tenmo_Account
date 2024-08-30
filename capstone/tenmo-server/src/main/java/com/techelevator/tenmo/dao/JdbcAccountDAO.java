@@ -21,6 +21,26 @@ public class JdbcAccountDAO implements AccountDAO {
     public JdbcAccountDAO(DataSource ds) {
         template = new JdbcTemplate(ds);
     }
+
+    @Override
+    public Account getAccount(String username) {
+        Account account = null;
+        String query = "select account.account_id,account.user_id,account.balance from account " +
+                "join tenmo_user on account.user_id = tenmo_user.user_id " +
+                "where username = ?;";
+        try{
+            SqlRowSet results = template.queryForRowSet(query,username);
+            if(results.next()){
+                account = mapRowToAccount(results);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+        System.out.println("Problem connecting");
+    } catch (DataIntegrityViolationException e) {
+        System.out.println("Data problems");
+    }
+        return account;
+    }
+
     @Override
     public BigDecimal getBalance(String username) {
         BigDecimal balance = BigDecimal.valueOf(0.00);

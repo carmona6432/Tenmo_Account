@@ -3,9 +3,11 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.TransferStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
+@Component
 public class JdbcTransferStatusDAO implements TransferStatusDAO{
     private JdbcTemplate jdbcTemplate;
     public JdbcTransferStatusDAO(DataSource dataSource) {

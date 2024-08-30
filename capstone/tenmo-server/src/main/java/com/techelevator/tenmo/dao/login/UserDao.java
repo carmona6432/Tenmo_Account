@@ -1,6 +1,6 @@
-package com.techelevator.tenmo.dao;
+package com.techelevator.tenmo.dao.login;
 
-import com.techelevator.tenmo.model.RegisterUserDto;
+import com.techelevator.tenmo.model.login.RegisterUserDto;
 import com.techelevator.tenmo.model.User;
 
 import java.util.List;

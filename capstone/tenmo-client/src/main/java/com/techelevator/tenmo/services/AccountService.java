@@ -2,6 +2,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferUsername;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,33 +25,55 @@ public class AccountService {
         httpHeaders.setBearerAuth(token);
 
         HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
-         return restTemplate.exchange(API_BASE_URL + "/balance",
+         return restTemplate.exchange(API_BASE_URL + "balance",
                  HttpMethod.GET,
                  entity,
                  BigDecimal.class).getBody();
     }
-    public Transfer[] getTransferFromAccount () {
+    public Account getAccount(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
+        return restTemplate.exchange(API_BASE_URL + "account",
+                HttpMethod.GET,
+                entity,
+                Account.class).getBody();
+    }
+    public TransferUsername[] getTransfersFromAccount(int id) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
 
         HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
 
-        return restTemplate.exchange(API_BASE_URL + "transfer/from",
+        return restTemplate.exchange(API_BASE_URL + "transfer/from/" + id,
                 HttpMethod.GET,
                 entity,
-                Transfer[].class).getBody();}
+                TransferUsername[].class).getBody();}
 
-    public  Transfer[] getTransferToAccount(){
+    public TransferUsername[] getTransfersToAccount(int id){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
 
         HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
 
-        return restTemplate.exchange(API_BASE_URL + "transfer/to",
+        return restTemplate.exchange(API_BASE_URL + "transfer/to/" + id,
                 HttpMethod.GET,
                 entity,
-                Transfer[].class).getBody();
+                TransferUsername[].class).getBody();
+    }
+
+    public TransferUsername[] getPendingRequests(int id){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
+
+        return restTemplate.exchange(API_BASE_URL + "transfer/pending/" + id,
+                HttpMethod.GET, entity, TransferUsername[].class).getBody();
+
     }
 }

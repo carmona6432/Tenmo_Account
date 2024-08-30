@@ -1,4 +1,4 @@
-package com.techelevator.tenmo.model;
+package com.techelevator.tenmo.model.login;
 
 import javax.validation.constraints.NotEmpty;
 /*

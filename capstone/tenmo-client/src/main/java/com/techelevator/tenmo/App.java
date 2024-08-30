@@ -1,8 +1,10 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.*;
+import com.techelevator.tenmo.model.login.AuthenticatedUser;
+import com.techelevator.tenmo.model.login.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
-import com.techelevator.tenmo.services.AuthenticationService;
+import com.techelevator.tenmo.services.login.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 
 import java.io.FileWriter;
@@ -95,28 +97,37 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-        BigDecimal balance = accountService.getBalance();
+        BigDecimal balance = accountService.getAccount().getBalance();
         System.out.println("The current balance for " + currentUser.getUser().getUsername() + " is $" + balance);
 		
 	}
 
 	private void viewTransferHistory() {
-		int code = consoleService.promptForInt("1. View Transaction from Friends" + "\n" + "2. View Transaction To Friends");
+        TransferUsername[] transfers;
+		int code = consoleService.promptForInt("1. Received" + "\n" + "2. Sent" + "\n");
         if(code == 1){
-            Transfer[] transfers = accountService.getTransferToAccount();
-            for(Transfer transfer: transfers){
-                System.out.println("Transfer Id: " + transfer.getId() + " From:" + transfer.getAccountFrom() + "for $" + transfer.getAmount() + "\n");
+            int id = accountService.getAccount().getAccountId();
+            transfers = accountService.getTransfersToAccount(id);
+            for(TransferUsername transfer: transfers){
+                System.out.println("Transfer Id:" + transfer.getTransferId() + " From: " + transfer.getUsername() + " for $" + transfer.getAmount() + "\n");
             }
         } else if(code == 2){
-            Transfer[] transfers = accountService.getTransferFromAccount();
-            for(Transfer transfer: transfers){
-                System.out.println("Transfer Id: " + transfer.getId() + " To:" + transfer.getAccountTo() + "for $" + transfer.getAmount() + "\n");
+            int id = accountService.getAccount().getAccountId();
+            transfers = accountService.getTransfersFromAccount(id);
+            for(TransferUsername transfer: transfers){
+                System.out.println("Transfer Id: " + transfer.getTransferId() + " To:" + transfer.getUsername() + " for $" + transfer.getAmount() + "\n");
             }
         }
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
+        int id = accountService.getAccount().getAccountId();
+        TransferUsername[] pendingRequests = accountService.getPendingRequests(id);
+        for(TransferUsername request : pendingRequests) {
+            System.out.println(request.getTransferId() + " " +
+                    request.getUsername() +
+                    " $" + request.getAmount());
+        }
 		
 	}
 

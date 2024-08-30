@@ -1,15 +1,13 @@
 package com.techelevator.dao;
 
-import com.techelevator.tenmo.dao.JdbcUserDao;
+import com.techelevator.tenmo.dao.login.JdbcUserDao;
 import com.techelevator.tenmo.exception.DaoException;
-import com.techelevator.tenmo.model.RegisterUserDto;
+import com.techelevator.tenmo.model.login.RegisterUserDto;
 import com.techelevator.tenmo.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 

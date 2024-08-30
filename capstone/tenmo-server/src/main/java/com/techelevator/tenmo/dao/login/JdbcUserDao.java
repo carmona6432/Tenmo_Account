@@ -1,7 +1,8 @@
-package com.techelevator.tenmo.dao;
+package com.techelevator.tenmo.dao.login;
 
+import com.techelevator.tenmo.dao.login.UserDao;
 import com.techelevator.tenmo.exception.DaoException;
-import com.techelevator.tenmo.model.RegisterUserDto;
+import com.techelevator.tenmo.model.login.RegisterUserDto;
 import com.techelevator.tenmo.model.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
