@@ -122,7 +122,7 @@ public class App {
 
 	private void viewPendingRequests() {
         int id = accountService.getAccount().getAccountId();
-        TransferUsername[] pendingRequests = accountService.getPendingRequests(id);
+        TransferUsername[] pendingRequests = accountService.getPendingRequests(currentUser,id);
         for(TransferUsername request : pendingRequests) {
             System.out.println(request.getTransferId() + " " +
                     request.getUsername() +

@@ -12,8 +12,21 @@ Implement transfers (server side)
 
 - Client side -
 Create menu methods in App
-    viewTransferHistory()
-    viewPendingRequests()
     sendBucks()
     requestBucks()
 need to view transfer history
+
+
+SendBucks():
+    - List of other users and not to self (Claudia)
+    - Create transfer method
+        - "Choose id from list:"
+            -method- pulls id, and gets account number (Taylor)
+        - "Amount to send:"
+      - Display the transfers
+    - if/ else statement- current user balance isn't < amount (create a method)
+    - Update account for both user_id
+    - if/else statment (make sure the final balance isn't 0 or negative) (create a method)
+        - final balance > 0 - "Your transfer has been approved!"
+        - final balance <= 0 - "Your transfer has been rejected!"
+            - Update transfer method that changes transfer_status_id to 3(rejected)

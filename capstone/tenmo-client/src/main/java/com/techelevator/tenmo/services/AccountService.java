@@ -68,7 +68,7 @@ public class AccountService {
                 TransferUsername[].class).getBody();
     }
 
-    public TransferUsername[] getPendingRequests(int id){
+    public TransferUsername[] getPendingRequests(AuthenticatedUser authenticatedUser,int id){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(token);
@@ -76,7 +76,7 @@ public class AccountService {
         HttpEntity<Void> entity = new HttpEntity<>(httpHeaders);
 
         return restTemplate.exchange(API_BASE_URL + "transfer/pending/" + id,
-                HttpMethod.GET, entity, TransferUsername[].class).getBody();
+                HttpMethod.GET, makeEntity(authenticatedUser), TransferUsername[].class).getBody();
 
     }
 
