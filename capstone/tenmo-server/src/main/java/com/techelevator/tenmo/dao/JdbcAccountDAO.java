@@ -58,15 +58,31 @@ public class JdbcAccountDAO implements AccountDAO {
         return account;
     }
     @Override
+    public Account getAccountByUserId(int user_id){
+        Account account = null;
+        String sql = "SELECT account_id FROM account WHERE user_id = ?;";
+        try {
+            SqlRowSet results = template.queryForRowSet(sql, user_id);
+            if (results.next()) {
+                account = mapRowToAccount(results);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            System.out.println("Problem connecting");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Data problems");
+        }
+        return account;
+    }
+    @Override
     public List<Account> getAccounts(String username) {
         List<Account> accounts = new ArrayList<>();
-        String sql = "select account.account_id,account.user_id, account.balance from account " +
+        String sql = "select account.user_id, tenmo_user.username from account " +
                 "join tenmo_user on account.user_id = tenmo_user.user_id " +
                 "where username != ?;";
         SqlRowSet results = template.queryForRowSet(sql,username);
         try{
         while (results.next()){
-            accounts.add(mapRowToAccount(results));
+            accounts.add(map(results));
         }} catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
         } catch (DataIntegrityViolationException e) {
@@ -104,6 +120,13 @@ public class JdbcAccountDAO implements AccountDAO {
         Account account = new Account();
         account.setAccountId(sqlRowSet.getInt("account_id"));
         account.setBalance(sqlRowSet.getBigDecimal("balance"));
+        account.setUserId(sqlRowSet.getInt("user_id"));
+        account.setUsername(sqlRowSet.getString("username"));
+        return account;
+    }
+    private Account map(SqlRowSet sqlRowSet){
+        Account account = new Account();
+        account.setUsername(sqlRowSet.getString("username"));
         account.setUserId(sqlRowSet.getInt("user_id"));
         return account;
     }
