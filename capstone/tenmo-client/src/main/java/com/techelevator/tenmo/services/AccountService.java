@@ -80,7 +80,7 @@ public class AccountService {
         return transferUsername;
     }
 
-    public TransferUsername[] getPendingRequests(int id){
+    public TransferUsername[] getPendingRequests(int id) {
         TransferUsername[] transferUsername = null;
         try {
             transferUsername = restTemplate.exchange(API_BASE_URL + "transfer/pending/" + id,
