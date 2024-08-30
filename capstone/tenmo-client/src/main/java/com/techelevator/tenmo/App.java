@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class App {
 
@@ -99,7 +100,7 @@ public class App {
 	private void viewCurrentBalance() {
         BigDecimal balance = accountService.getAccount().getBalance();
         System.out.println("The current balance for " + currentUser.getUser().getUsername() + " is $" + balance);
-		
+
 	}
 
 	private void viewTransferHistory() {
@@ -128,7 +129,7 @@ public class App {
                     request.getUsername() +
                     " $" + request.getAmount());
         }
-		
+
 	}
 
 	private void sendBucks() {
@@ -137,22 +138,22 @@ public class App {
                 "Users\n" +
                 "ID          Name\n" +
                 "-------------------------------------------");
-        //Print available users and user Ids
-        System.out.println(accountService.getAccounts());
-        String username = consoleService.promptForString("Please Enter Recipient Username: ");
-//        Account recipientAccount = accountService.getAccountByUsername(username);
-//        if (recipientAccount == null) {
-//            System.out.println("Recipient not found.");
-//            return;
-//        if (recipientAccount == currentUser.getUser().getUsername()) {
-//            System.out.println("Can't send money to yourself Dumb Dumb.");
-//            return;
-//        }
-
+        for (Account account : accountService.getAccounts()) {
+            System.out.println(account.getUserId() + "        " + account.getUsername());
+        }
+        int userId = consoleService.promptForInt("Please Enter Recipient Id: ");
+        Account recipientAccount = accountService.getAccountByUserId(userId);
+        if (recipientAccount == null) {
+            System.out.println("Recipient not found.");
+            return;
+        }
+        if (recipientAccount.getUserId() == currentUser.getUser().getId()) {
+            System.out.println("Can't send money to yourself Dumb Dumb.");
+            return;
+        }
         BigDecimal balance = accountService.getAccount().getBalance();
         System.out.println("-------------------------------------------");
         System.out.println("Available Balance: $" + balance);
-
 
         BigDecimal amount = consoleService.promptForBigDecimal("Enter Amount to Send: ");
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -170,11 +171,10 @@ public class App {
 //        } else {
 //            System.out.println("Transfer failed.");
 //        }
-	}
+        }
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+
 	}
     //The following method can be called to make a log of a transfer
     private void logChange(String action, double amount, double newBalance) {

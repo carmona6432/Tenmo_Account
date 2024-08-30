@@ -24,7 +24,6 @@ public class AccountService {
     public void setToken(String token) {
         this.token = token;
     }
-<<<<<<< HEAD
     public BigDecimal getBalance() {
         BigDecimal bigD = null;
         try {
@@ -39,8 +38,6 @@ public class AccountService {
         }
         return bigD;
     }
-=======
->>>>>>> 116c4e0343d6eb8890eb97848c25d0d57b455907
     public Account[] getAccounts() {
         Account[] accounts = new Account[0];
         try {
