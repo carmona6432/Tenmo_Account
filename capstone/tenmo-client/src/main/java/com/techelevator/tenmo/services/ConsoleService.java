@@ -79,6 +79,12 @@ public class ConsoleService {
         }
     }
 
+   public void displayUsersFrame(){
+       System.out.println("-------------------------------------------\n" +
+               "Users\n" + "ID          Name\n" +
+               "-------------------------------------------");
+   }
+
     public void pause() {
         System.out.println("\nPress Enter to continue...");
         scanner.nextLine();

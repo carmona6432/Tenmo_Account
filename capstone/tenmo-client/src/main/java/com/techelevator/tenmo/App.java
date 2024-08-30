@@ -134,10 +134,7 @@ public class App {
 
 	private void sendBucks() {
         Transfer transfer = new Transfer();
-        System.out.println("-------------------------------------------\n" +
-                "Users\n" +
-                "ID          Name\n" +
-                "-------------------------------------------");
+        consoleService.displayUsersFrame();
         for (Account account : accountService.getAccounts()) {
             System.out.println(account.getUserId() + "        " + account.getUsername());
         }
@@ -152,7 +149,7 @@ public class App {
             return;
         }
         BigDecimal balance = accountService.getAccount().getBalance();
-        System.out.println("-------------------------------------------");
+        System.out.println(consoleService.toString());
         System.out.println("Available Balance: $" + balance);
 
         BigDecimal amount = consoleService.promptForBigDecimal("Enter Amount to Send: ");
