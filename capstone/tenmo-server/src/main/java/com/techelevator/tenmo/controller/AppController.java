@@ -40,6 +40,11 @@ public class AppController {
         String username = user.getName();
         return accountDAO.getAccounts(username);
     }
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @PutMapping(path = "accounts/{accountId}")
+    void updateAccount(@RequestBody Account account, int amount, @PathVariable int from_account, int to_account){
+        accountDAO.updateAccount(account,amount,from_account,to_account);
+    }
     @GetMapping(path = "transfers/{id}")
     public Transfer getTransferByTransferId(int transferId){
         return transferDAO.getTransferByTransferId(transferId);
