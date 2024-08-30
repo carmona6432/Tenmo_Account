@@ -4,16 +4,11 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.TransferStatusDAO;
 import com.techelevator.tenmo.dao.TransferTypeDAO;
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.TransferUsername;
-import com.techelevator.tenmo.model.TransferStatus;
-import com.techelevator.tenmo.model.TransferType;
+import com.techelevator.tenmo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -61,6 +56,18 @@ public class AppController {
     public List<TransferUsername> getPendingTransfersById(@PathVariable int id){
         return transferDAO.getPendingTransfersById(id);
     }
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(path = "transfers")
+    public void createTransfer(Transfer transfer){
+        createTransfer(transfer);
+    }
+
+    @PutMapping(path = "transfers/{id}")
+    public void updateTransfer(){
+        updateTransfer();
+    }
+
+
     @GetMapping(path="/transfertype/sort")
     public TransferType getTransferTypeByDescription(@RequestParam String description) {
        return transferTypeDAO.getTransferTypeByDescription(description);

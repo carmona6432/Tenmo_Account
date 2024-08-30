@@ -82,7 +82,7 @@ public class JdbcAccountDAO implements AccountDAO {
     @Override
     public List<Account> getAccounts(String username) {
         List<Account> accounts = new ArrayList<>();
-        String sql = "select account.account_id,account.user_id,account.balance from account" +
+        String sql = "select account.account_id,account.user_id, account.balance from account " +
                 "join tenmo_user on account.user_id = tenmo_user.user_id " +
                 "where username != ?;";
         SqlRowSet results = template.queryForRowSet(sql,username);
