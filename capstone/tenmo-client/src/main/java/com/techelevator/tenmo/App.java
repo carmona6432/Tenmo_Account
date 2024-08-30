@@ -139,7 +139,10 @@ public class App {
                 "-------------------------------------------");
         
         String username = consoleService.promptForString("Please Enter Recipient Username: ");
-        
+
+        System.out.println("");
+        BigDecimal balance = accountService.getAccount().getBalance();
+
 
         BigDecimal amount = consoleService.promptForBigDecimal("Enter Amount to Send: ");
 
