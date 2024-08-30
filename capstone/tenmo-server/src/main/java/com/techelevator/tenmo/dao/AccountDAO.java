@@ -11,7 +11,7 @@ public interface AccountDAO {
     Account getAccountById(int account_id);
     Account getAccountByUserId(int user_id);
     List<Account> getAccounts(String username);
-    Account updateAccount(Account account, int amount, int from_account, int to_account);
+    void updateAccount(Account account, int amount, int from_account, int to_account);
 
 
 

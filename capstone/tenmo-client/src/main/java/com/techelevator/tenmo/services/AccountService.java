@@ -55,7 +55,7 @@ public class AccountService {
     public Account getAccount(){
         Account account = null;
         try {
-            account = restTemplate.exchange(API_BASE_URL + "account",
+            account = restTemplate.exchange(API_BASE_URL + "accounts",
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class).getBody();
@@ -69,7 +69,7 @@ public class AccountService {
     public TransferUsername[] getTransfersFromAccount(int id) {
         TransferUsername[] transferUsername = null;
         try {
-            transferUsername =  restTemplate.exchange(API_BASE_URL + "transfer/from/" + id,
+            transferUsername =  restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
                 HttpMethod.GET,
                 makeAuthEntity(),
                 TransferUsername[].class).getBody();
@@ -84,7 +84,7 @@ public class AccountService {
     public TransferUsername[] getTransfersToAccount(int id){
         TransferUsername[] transferUsername = null;
         try {
-           transferUsername = restTemplate.exchange(API_BASE_URL + "transfer/to/" + id,
+           transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/to/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     TransferUsername[].class).getBody();
@@ -99,7 +99,7 @@ public class AccountService {
     public TransferUsername[] getPendingRequests(int id) {
         TransferUsername[] transferUsername = null;
         try {
-            transferUsername = restTemplate.exchange(API_BASE_URL + "transfer/pending/" + id,
+            transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     TransferUsername[].class).getBody();
@@ -115,7 +115,7 @@ public class AccountService {
 
         Account account = null;
         try {
-            account = restTemplate.exchange(API_BASE_URL + "account/user/" + userId,
+            account = restTemplate.exchange(API_BASE_URL + "accounts/user/" + userId,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class).getBody();

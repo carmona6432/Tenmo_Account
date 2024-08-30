@@ -92,9 +92,7 @@ public class JdbcAccountDAO implements AccountDAO {
     }
 
     @Override
-    public Account updateAccount(Account account, int amount, int from_account, int to_account) {
-        Account fromAccount = null;
-        Account toAccount = null;
+    public void updateAccount(Account account, int amount, int from_account, int to_account) {
         String sql = "update account set balance = balance - ? where account_id = ?";
         String sql1 = "update account set balance = balance + ? where account_id = ?;";
         try{
@@ -103,8 +101,8 @@ public class JdbcAccountDAO implements AccountDAO {
             if(numberOfRows == 0){
                 throw new DaoException("Zero rows affected, expected at least one");
             } else{
-                fromAccount = getAccountById(numberOfRows);
-                toAccount = getAccountById(numberOfRows1);
+                getAccountById(numberOfRows);
+                getAccountById(numberOfRows1);
 
             }
         } catch (CannotGetJdbcConnectionException e) {
@@ -112,7 +110,6 @@ public class JdbcAccountDAO implements AccountDAO {
         } catch (DataIntegrityViolationException e) {
             System.out.println("Data problems");
         }
-        return toAccount;
     }
 
 
