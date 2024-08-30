@@ -95,7 +95,6 @@ public class JdbcAccountDAO implements AccountDAO {
             System.out.println("Data problems");
         }
         return accounts;
-
     }
 
     @Override
