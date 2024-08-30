@@ -13,6 +13,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountService {
 
@@ -35,6 +37,20 @@ public class AccountService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return bigD;
+    }
+    public Account[] getAccounts(String username) {
+        Account[] accounts = new Account[0];
+        try {
+            accounts = restTemplate.exchange(API_BASE_URL + "accounts/users",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Account[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return accounts;
     }
     public Account getAccount(){
         Account account = null;
