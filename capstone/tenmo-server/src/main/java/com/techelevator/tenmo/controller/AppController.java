@@ -32,12 +32,6 @@ public class AppController {
         return accountDAO.getAccount(username);
     }
 
-    @GetMapping(path = "balance")
-    public BigDecimal getBalance(Principal user) {
-        String username = user.getName();
-        return accountDAO.getBalance(username);
-    }
-
     @GetMapping(path = "accounts/users")
     public List<Account> accounts(Principal user){
         String username = user.getName();

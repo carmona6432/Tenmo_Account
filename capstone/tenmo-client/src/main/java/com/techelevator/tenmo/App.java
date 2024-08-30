@@ -138,6 +138,7 @@ public class App {
                 "ID          Name\n" +
                 "-------------------------------------------");
         //Print available users and user Ids
+        System.out.println();
         
         String username = consoleService.promptForString("Please Enter Recipient Username: ");
 //        Account recipientAccount = accountService.getAccountByUsername(username);

@@ -57,28 +57,6 @@ public class JdbcAccountDAO implements AccountDAO {
         }
         return account;
     }
-
-    @Override
-    public BigDecimal getBalance(String username) {
-        BigDecimal balance = BigDecimal.valueOf(0.00);
-        String sql = "SELECT balance FROM account " +
-                "JOIN tenmo_user on account.user_id = tenmo_user.user_id " +
-                "WHERE username = ?;";
-        try {
-            SqlRowSet results = template.queryForRowSet(sql, username);
-
-            if(results.next()) {
-                balance = results.getBigDecimal("balance");
-            }
-
-        } catch (CannotGetJdbcConnectionException e) {
-            System.out.println("Problem connecting");
-        } catch (DataIntegrityViolationException e) {
-            System.out.println("Data problems");
-        }
-        return balance;
-    }
-
     @Override
     public List<Account> getAccounts(String username) {
         List<Account> accounts = new ArrayList<>();

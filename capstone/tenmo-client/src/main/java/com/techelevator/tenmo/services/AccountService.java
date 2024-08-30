@@ -24,21 +24,7 @@ public class AccountService {
     public void setToken(String token) {
         this.token = token;
     }
-    public BigDecimal getBalance() {
-        BigDecimal bigD = null;
-        try {
-            bigD =  restTemplate.exchange(API_BASE_URL + "balance",
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    BigDecimal.class).getBody();
-        } catch (ResourceAccessException e) {
-            System.out.println("Error in resource access: " + e.getMessage());
-        } catch (RestClientResponseException e) {
-            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
-        }
-        return bigD;
-    }
-    public Account[] getAccounts(String username) {
+    public Account[] getAccounts() {
         Account[] accounts = new Account[0];
         try {
             accounts = restTemplate.exchange(API_BASE_URL + "accounts/users",
