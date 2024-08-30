@@ -96,6 +96,7 @@ public class AccountService {
     }
 
     public Account getAccountByUserId(int userId) {
+
         Account account = null;
         try {
             account = restTemplate.exchange(API_BASE_URL + "account/user/" + userId,

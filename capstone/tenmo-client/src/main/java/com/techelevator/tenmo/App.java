@@ -132,6 +132,17 @@ public class App {
 	}
 
 	private void sendBucks() {
+        Transfer transfer = new Transfer();
+        System.out.println("-------------------------------------------\n" +
+                "Users\n" +
+                "ID          Name\n" +
+                "-------------------------------------------");
+        
+        String username = consoleService.promptForString("Please Enter Recipient Username: ");
+        
+
+        BigDecimal amount = consoleService.promptForBigDecimal("Enter Amount to Send: ");
+
 		// TODO Auto-generated method stub
 		
 	}
