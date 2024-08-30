@@ -137,14 +137,35 @@ public class App {
                 "Users\n" +
                 "ID          Name\n" +
                 "-------------------------------------------");
+        //Print available users and user Ids
         
         String username = consoleService.promptForString("Please Enter Recipient Username: ");
+//        Account recipientAccount = accountService.getAccountByUsername(username);
+//        if (recipientAccount == null) {
+//            System.out.println("Recipient not found.");
+//            return;
 
-        System.out.println("");
         BigDecimal balance = accountService.getAccount().getBalance();
+        System.out.println("-------------------------------------------");
+        System.out.println("Available Balance: $" + balance);
 
 
         BigDecimal amount = consoleService.promptForBigDecimal("Enter Amount to Send: ");
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            System.out.println("Amount must be greater than zero.");
+            return;
+        }
+        if (amount.compareTo(balance) > 0) {
+            System.out.println("Insufficient balance.");
+            return;
+        }
+//        boolean success = transfer.executeTransfer(accountService.getAccount(), recipientAccount, amount);
+//
+//        if (success) {
+//            System.out.println("Transfer successful!");
+//        } else {
+//            System.out.println("Transfer failed.");
+//        }
 
 		// TODO Auto-generated method stub
 		
