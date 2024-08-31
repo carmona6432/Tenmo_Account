@@ -6,5 +6,5 @@ public interface TransferTypeDAO {
     
     TransferType getTransferTypeByDescription(String description);
     
-    TransferType getTransferTypeById(int transferId);
+    String getTransferTypeById(int transferId);
 }

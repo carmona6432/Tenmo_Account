@@ -112,13 +112,13 @@ public class App {
             int id = accountService.getAccount().getAccountId();
             transfers = accountService.getTransfersToAccount(id);
             for (Transfer transfer : transfers) {
-//                consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId(),transferService.getTransferStatusById(transfer.getTransferStatusId()),currentUser.getUser().getUsername(),transfer.getUsername(),transfer.getAmount()));
+                consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),currentUser.getUser().getUsername(),transfer.getUsername(),transfer.getAmount());
             }
         } else if (code == 2) {
             int id = accountService.getAccount().getAccountId();
             transfers = accountService.getTransfersFromAccount(id);
             for (Transfer transfer : transfers) {
-//                consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId(),transferService.getTransferStatusById(transfer.getTransferStatusId()),transfer.getUsername(),currentUser.getUser().getUsername(),transfer.getAmount()));
+                consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),transfer.getUsername(),currentUser.getUser().getUsername(),transfer.getAmount());
             }
         }
     }

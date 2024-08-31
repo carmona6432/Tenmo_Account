@@ -6,7 +6,7 @@ public interface TransferStatusDAO {
     
     TransferStatus getTransferStatusByDescription(String description);
     
-    TransferStatus getTransferStatusById(int transferStatusId);
+    String getTransferStatusById(int transferStatusId);
     
     
 }

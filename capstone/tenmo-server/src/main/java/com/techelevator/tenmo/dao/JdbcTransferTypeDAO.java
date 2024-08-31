@@ -29,15 +29,13 @@ public class JdbcTransferTypeDAO implements TransferTypeDAO{
     }
 
     @Override
-    public TransferType getTransferTypeById(int transferTypeId) {
+    public String getTransferTypeById(int transferTypeId) {
         String sql = "SELECT transfer_type_id, transfer_type_desc " +
                 "FROM transfer_type WHERE transfer_type_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferTypeId);
-        TransferType transferType = null;
+        String  transferType = null;
         if (result.next()) {
-            int newTransferTypeId = result.getInt("transfer_type_id");
-            String transferTypeDescription = result.getString("transfer_type_desc");
-            transferType = new TransferType(newTransferTypeId, transferTypeDescription);
+             transferType = result.getString("transfer_type_desc");
         }
         return transferType;
     }

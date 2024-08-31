@@ -28,15 +28,13 @@ public class JdbcTransferStatusDAO implements TransferStatusDAO{
     }
 
     @Override
-    public TransferStatus getTransferStatusById(int transferStatusId) {
+    public String getTransferStatusById(int transferStatusId) {
         String sql = "SELECT transfer_status_id, transfer_status_desc " +
                 "FROM transfer_status WHERE transfer_status_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferStatusId);
-        TransferStatus transferStatus = null;
+        String transferStatus = null;
         if (result.next()) {
-            int newTransferStatusId = result.getInt("transfer_status_id");
-            String transferStatusDescription = result.getString("transfer_status_desc");
-            transferStatus = new TransferStatus(newTransferStatusId, transferStatusDescription);
+            transferStatus = result.getString("transfer_status_desc");
         }
         return transferStatus;
     }

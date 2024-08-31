@@ -70,12 +70,12 @@ public class TransferService {
         }
         return isUpdated;
     }
-    public TransferStatus getTransferStatusById(int transferStatusId) {
-        TransferStatus transferStatus = null;
+    public String getTransferStatusById(int transferStatusId) {
+        String transferStatus = null;
         try {
             String url = API_BASE_URL + "/transferstatus/" + transferStatusId;
             transferStatus = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
-                    TransferStatus.class).getBody();
+                    String.class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -84,12 +84,12 @@ public class TransferService {
 
         return transferStatus;
     }
-    public TransferType getTransferTypeById(int transferTypeId) {
-        TransferType transferType = null;
+    public String getTransferTypeById(int transferTypeId) {
+        String transferType = null;
         try {
             String url = API_BASE_URL + "/transfertype/" + transferTypeId;
             transferType = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
-                    TransferType.class).getBody();
+                    String.class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {

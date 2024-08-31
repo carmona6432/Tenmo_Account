@@ -52,12 +52,14 @@ public class AppController {
     public TransferStatus getTransferStatusByDescription(@RequestParam String description) {
         return transferStatusDAO.getTransferStatusByDescription(description);
     }
+    @PreAuthorize("permitAll")
     @GetMapping(path="transferstatus/{id}")
-    public TransferStatus getTransferStatusById(@PathVariable int id) {
+    public String getTransferStatusById(@PathVariable int id) {
         return transferStatusDAO.getTransferStatusById(id);
     }
+    @PreAuthorize("permitAll")
     @GetMapping(path="transfertype/{id}")
-    public TransferType getTransferTypeById(@PathVariable int id) {
+    public String getTransferTypeById(@PathVariable int id) {
         return transferTypeDAO.getTransferTypeById(id);
     }
 
