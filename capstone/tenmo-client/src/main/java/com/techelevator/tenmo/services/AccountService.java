@@ -115,7 +115,7 @@ public class AccountService {
 
         Account account = null;
         try {
-            account = restTemplate.exchange(API_BASE_URL + "accounts/user/" + userId,
+            account = restTemplate.exchange(API_BASE_URL + "accounts/" + userId,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class).getBody();

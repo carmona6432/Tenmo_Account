@@ -42,7 +42,7 @@ public class JdbcAccountDAO implements AccountDAO {
         return account;
     }
     @Override
-    public Account getAccountById(int accountId){
+    public Account getAccountByAccountId(int accountId){
         Account account = null;
         String sql = "SELECT * FROM account WHERE account_id = ?;";
         try {
@@ -58,13 +58,13 @@ public class JdbcAccountDAO implements AccountDAO {
         return account;
     }
     @Override
-    public Account getAccountByUserId(int user_id){
-        Account account = null;
+    public int getAccountByUserId(int user_id){
+        int account = 0;
         String sql = "SELECT account_id FROM account WHERE user_id = ?;";
         try {
             SqlRowSet results = template.queryForRowSet(sql, user_id);
             if (results.next()) {
-                account = mapRowToAccount(results);
+                account = results.getInt("account_id");
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
@@ -101,8 +101,8 @@ public class JdbcAccountDAO implements AccountDAO {
             if(numberOfRows == 0){
                 throw new DaoException("Zero rows affected, expected at least one");
             } else{
-                getAccountById(numberOfRows);
-                getAccountById(numberOfRows1);
+                getAccountByAccountId(numberOfRows);
+                getAccountByAccountId(numberOfRows1);
 
             }
         } catch (CannotGetJdbcConnectionException e) {
@@ -118,7 +118,6 @@ public class JdbcAccountDAO implements AccountDAO {
         account.setAccountId(sqlRowSet.getInt("account_id"));
         account.setBalance(sqlRowSet.getBigDecimal("balance"));
         account.setUserId(sqlRowSet.getInt("user_id"));
-        account.setUsername(sqlRowSet.getString("username"));
         return account;
     }
     private Account map(SqlRowSet sqlRowSet){

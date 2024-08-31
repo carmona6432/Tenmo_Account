@@ -4,6 +4,7 @@ import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.model.login.AuthenticatedUser;
 import com.techelevator.tenmo.model.login.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
+import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.login.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 
@@ -25,6 +26,7 @@ public class App {
     private AuthenticatedUser currentUser;
     private static final String LOG_FILE = "Log.txt";
     private AccountService accountService = new AccountService();
+    private TransferService transferService = new TransferService();
 
     public static void main(String[] args) {
         App app = new App();
@@ -105,7 +107,7 @@ public class App {
 
 	private void viewTransferHistory() {
         TransferUsername[] transfers;
-		int code = consoleService.promptForInt("1. Received" + "\n" + "2. Sent" + "\n");
+		int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + consoleService.toString() + "\n");
         if(code == 1){
             int id = accountService.getAccount().getAccountId();
             transfers = accountService.getTransfersToAccount(id);
@@ -125,9 +127,9 @@ public class App {
         int id = accountService.getAccount().getAccountId();
         TransferUsername[] pendingRequests = accountService.getPendingRequests(id);
         for(TransferUsername request : pendingRequests) {
-            System.out.println(request.getTransferId() + " " +
+            System.out.println(consoleService.toString() + "\n" + request.getTransferId() + " " +
                     request.getUsername() +
-                    " $" + request.getAmount());
+                    " $" + request.getAmount() + "\n" + consoleService.toString());
         }
 
 	}
@@ -149,8 +151,7 @@ public class App {
             return;
         }
         BigDecimal balance = accountService.getAccount().getBalance();
-        System.out.println(consoleService.toString());
-        System.out.println("Available Balance: $" + balance);
+        System.out.println(consoleService.toString() + "\nAvailable Balance: $" + balance);
 
         BigDecimal amount = consoleService.promptForBigDecimal("Enter Amount to Send: ");
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {

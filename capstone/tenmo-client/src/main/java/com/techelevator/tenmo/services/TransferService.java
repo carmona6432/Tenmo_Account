@@ -21,7 +21,21 @@ public class TransferService {
     public void setToken(String token) {
         this.token = token;
     }
-
+    public Transfer transferById(int id){
+        Transfer transfer = null;
+        try{transfer = restTemplate.exchange(
+                API_BASE_URL + "transfers/" + id,
+                HttpMethod.GET,
+                makeAuthEntity(),
+                Transfer.class
+        ).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfer;
+    }
     public Transfer sendTransfer() {
         Transfer transfer = null;
         try {

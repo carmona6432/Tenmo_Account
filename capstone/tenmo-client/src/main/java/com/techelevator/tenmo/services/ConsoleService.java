@@ -85,6 +85,11 @@ public class ConsoleService {
                "-------------------------------------------");
    }
 
+   public String toString(){
+        String frame = "-------------------------------------------";
+        return frame;
+   }
+
     public void pause() {
         System.out.println("\nPress Enter to continue...");
         scanner.nextLine();
