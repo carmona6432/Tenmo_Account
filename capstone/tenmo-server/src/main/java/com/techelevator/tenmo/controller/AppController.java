@@ -62,5 +62,11 @@ public class AppController {
     public String getTransferTypeById(@PathVariable int id) {
         return transferTypeDAO.getTransferTypeById(id);
     }
+    @PreAuthorize("permitAll")
+    @GetMapping(path = "username/{id}")
+    String getUsernameByAccountId(int account_id){
+        return accountDAO.getUsernameByAccountId(account_id);
+    }
+
 
 }

@@ -111,6 +111,18 @@ public class JdbcAccountDAO implements AccountDAO {
             System.out.println("Data problems");
         }
     }
+    @Override
+    public String getUsernameByAccountId(int acount_id){
+        String user = "";
+        String sql = "select username from tenmo_user " +
+                "join account on account.user_id = tenmo_user.user_id " +
+                "where account_id = ?;";
+        SqlRowSet result = template.queryForRowSet(sql,acount_id);
+        if(result.next()){
+            user = result.getString("username");
+        }
+        return user;
+    }
 
 
     private Account mapRowToAccount (SqlRowSet sqlRowSet) {
