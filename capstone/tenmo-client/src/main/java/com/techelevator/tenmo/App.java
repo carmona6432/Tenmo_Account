@@ -175,6 +175,13 @@ public class App {
         }
 
 	private void requestBucks() {
+        consoleService.displayUsersFrame();
+        for (Account account : accountService.getAccounts()) {
+            System.out.println(account.getUserId() + "        " + account.getUsername());
+        }
+        int user_id = consoleService.promptForInt("Please Enter Recipient Id:");
+        BigDecimal amount = consoleService.promptForBigDecimal("Please Enter The Amount You would like to request $");
+        //createTransferMethod
 
 	}
     //The following method can be called to make a log of a transfer
