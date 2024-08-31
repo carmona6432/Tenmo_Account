@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
@@ -29,9 +28,10 @@ public class AppController {
         String username = user.getName();
         return accountDAO.getAccount(username);
     }
-    @GetMapping(path = "accounts/{id}")
-    public int getAccountByUserId(int user_id){
-        return accountDAO.getAccountByUserId(user_id);
+    @GetMapping(path = "accounts/{userId}")
+    public Account getAccountByUserId(@PathVariable int userId){
+        System.out.println(userId);
+        return accountDAO.getAccountByUserId(userId);
     }
     @GetMapping(path = "accounts/users")
     public List<Account> accounts(Principal user){

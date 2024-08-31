@@ -58,13 +58,13 @@ public class JdbcAccountDAO implements AccountDAO {
         return account;
     }
     @Override
-    public int getAccountByUserId(int user_id){
-        int account = 0;
-        String sql = "SELECT account_id FROM account WHERE user_id = ?;";
+    public Account getAccountByUserId(int userId){
+        Account account = null;
+        String sql = "SELECT * FROM account WHERE user_id = ?;";
         try {
-            SqlRowSet results = template.queryForRowSet(sql, user_id);
+            SqlRowSet results = template.queryForRowSet(sql, userId);
             if (results.next()) {
-                account = results.getInt("account_id");
+                account = mapRowToAccount(results);
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");

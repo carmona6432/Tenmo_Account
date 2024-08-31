@@ -73,6 +73,7 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
+        accountService.setToken(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -140,15 +141,13 @@ public class App {
         for (Account account : accountService.getAccounts()) {
             System.out.println(account.getUserId() + "        " + account.getUsername());
         }
-        int userId = consoleService.promptForInt("Please Enter Recipient Id: ");
+        Integer userId = consoleService.promptForInt("Please Enter Recipient Id: ");
         Account recipientAccount = accountService.getAccountByUserId(userId);
         if (recipientAccount == null) {
             System.out.println("Recipient not found.");
-            return;
         }
         if (recipientAccount.getUserId() == currentUser.getUser().getId()) {
             System.out.println("Can't send money to yourself Dumb Dumb.");
-            return;
         }
         BigDecimal balance = accountService.getAccount().getBalance();
         System.out.println(consoleService.toString() + "\nAvailable Balance: $" + balance);

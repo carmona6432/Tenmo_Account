@@ -9,7 +9,7 @@ import java.util.List;
 public interface AccountDAO {
     Account getAccount(String username);
     Account getAccountByAccountId(int account_id);
-    int getAccountByUserId(int user_id);
+    Account getAccountByUserId(int userId);
     List<Account> getAccounts(String username);
     String getUsernameByAccountId(int account_id);
     void updateAccount(Account account, int amount, int from_account, int to_account);
