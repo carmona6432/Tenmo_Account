@@ -106,22 +106,22 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-        TransferUsername[] transfers;
-		int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + consoleService.toString() + "\n");
-        if(code == 1){
+        Transfer[] transfers;
+        int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + consoleService.toString() + "\n");
+        if (code == 1) {
             int id = accountService.getAccount().getAccountId();
             transfers = accountService.getTransfersToAccount(id);
-            for(TransferUsername transfer: transfers){
-                System.out.println("Transfer Id:" + transfer.getTransferId() + " From: " + transfer.getUsername() + " for $" + transfer.getAmount() + "\n");
+            for (Transfer transfer : transfers) {
+//                consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId(),transferService.getTransferStatusById(transfer.getTransferStatusId()),currentUser.getUser().getUsername(),transfer.getUsername(),transfer.getAmount()));
             }
-        } else if(code == 2){
+        } else if (code == 2) {
             int id = accountService.getAccount().getAccountId();
             transfers = accountService.getTransfersFromAccount(id);
-            for(TransferUsername transfer: transfers){
-                System.out.println("Transfer Id: " + transfer.getTransferId() + " To:" + transfer.getUsername() + " for $" + transfer.getAmount() + "\n");
+            for (Transfer transfer : transfers) {
+//                consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId(),transferService.getTransferStatusById(transfer.getTransferStatusId()),transfer.getUsername(),currentUser.getUser().getUsername(),transfer.getAmount()));
             }
         }
-	}
+    }
 
 	private void viewPendingRequests() {
         int id = accountService.getAccount().getAccountId();

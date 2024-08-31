@@ -19,16 +19,17 @@ public class JdbcTransferDAO implements TransferDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<TransferUsername> getTransfersFromAccount(int accountId) {
-        List<TransferUsername> transfers = new ArrayList<>();
-        String sql = "select transfer_id, username, amount from transfer " +
+    public List<Transfer> getTransfersFromAccount(int accountId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "select transfer.transfer_id, transfer.transfer_type_id, transfer.transfer_status_id, " +
+                "tenmo_user.username, transfer.amount from transfer " +
                 "JOIN account ON transfer.account_to = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "where transfer_type_id = 2 and account_from = ?;";
+                "where transfer_type_id = 2 and account_from =;";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
             while (results.next()) {
-                transfers.add(mapRow(results));
+                transfers.add(mapRowWithUsername(results));
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
@@ -39,9 +40,10 @@ public class JdbcTransferDAO implements TransferDAO {
     }
 
     @Override
-    public List<TransferUsername> getTransfersToAccount(int accountId) {
-        List<TransferUsername> transfers = new ArrayList<>();
-        String sql = "select transfer_id, username, amount from transfer " +
+    public List<Transfer> getTransfersToAccount(int accountId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "select transfer.transfer_id, transfer.transfer_type_id, transfer.transfer_status_id, " +
+                "tenmo_user.username, transfer.amount from transfer " +
                 "JOIN account ON transfer.account_from = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
                 "where transfer_type_id = 2 and account_to = ?";
@@ -49,7 +51,7 @@ public class JdbcTransferDAO implements TransferDAO {
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
             while (results.next()) {
-                transfers.add(mapRow(results));
+                transfers.add(mapRowWithUsername(results));
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
@@ -133,6 +135,15 @@ public class JdbcTransferDAO implements TransferDAO {
             transfer.setAccountFrom(sqlRowSet.getInt("account_from"));
             transfer.setAccountTo(sqlRowSet.getInt("account_to"));
             transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
+            return transfer;
+        }
+        private Transfer mapRowWithUsername(SqlRowSet sqlRowSet){
+            Transfer transfer = new Transfer();
+            transfer.setId(sqlRowSet.getInt("transfer_id"));
+            transfer.setTransferTypeId(sqlRowSet.getInt("transfer_type_id"));
+            transfer.setTransferStatusId(sqlRowSet.getInt("transfer_status_id"));
+            transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
+            transfer.setUsername(sqlRowSet.getString("username"));
             return transfer;
         }
 

@@ -21,11 +21,11 @@ public class TransferController {
     }
 
     @GetMapping(path = "transfers/from/{id}")
-    public List<TransferUsername> getTransferFromAccount (@PathVariable int id) {
+    public List<Transfer> getTransferFromAccount (@PathVariable int id) {
         return transferDAO.getTransfersFromAccount(id);
     }
     @GetMapping(path = "transfers/to/{id}")
-    public List<TransferUsername> getTransferToAccount (@PathVariable int id) {
+    public List<Transfer> getTransferToAccount (@PathVariable int id) {
         return transferDAO.getTransfersToAccount(id);
     }
     @GetMapping(path = "transfers/pending/{id}")

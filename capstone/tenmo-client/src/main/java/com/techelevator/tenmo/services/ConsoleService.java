@@ -89,7 +89,7 @@ public class ConsoleService {
         String frame = "-------------------------------------------";
         return frame;
    }
-   public void displayTransfer(int transfer_id, String transfer_type, String transfer_status_type, int account_from, int account_to, int amount){
+   public void displayTransfer(int transfer_id, String transfer_type, String transfer_status_type, String account_from, String account_to, int amount){
         System.out.println(toString() + "\n Transfer Details \n" + toString());
         System.out.println("Transfer_id: " + transfer_id);
         System.out.println("From: " + account_from );

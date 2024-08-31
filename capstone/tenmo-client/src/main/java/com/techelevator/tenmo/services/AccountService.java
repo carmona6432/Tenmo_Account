@@ -66,28 +66,28 @@ public class AccountService {
         }
         return account;
     }
-    public TransferUsername[] getTransfersFromAccount(int id) {
-        TransferUsername[] transferUsername = null;
+    public Transfer[] getTransfersFromAccount(int id) {
+        Transfer[] transfer = null;
         try {
-            transferUsername =  restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
+            transfer =  restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
                 HttpMethod.GET,
                 makeAuthEntity(),
-                TransferUsername[].class).getBody();
+                Transfer[].class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
-        return transferUsername;
+        return transfer;
     }
 
-    public TransferUsername[] getTransfersToAccount(int id){
-        TransferUsername[] transferUsername = null;
+    public Transfer[] getTransfersToAccount(int id){
+        Transfer[] transferUsername = null;
         try {
            transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/to/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    TransferUsername[].class).getBody();
+                    Transfer[].class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {

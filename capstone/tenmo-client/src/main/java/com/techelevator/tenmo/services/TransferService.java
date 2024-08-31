@@ -2,6 +2,9 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferStatus;
+import com.techelevator.tenmo.model.TransferType;
+import com.techelevator.tenmo.model.login.AuthenticatedUser;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -66,6 +69,33 @@ public class TransferService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return isUpdated;
+    }
+    public TransferStatus getTransferStatusById(int transferStatusId) {
+        TransferStatus transferStatus = null;
+        try {
+            String url = API_BASE_URL + "/transferstatus/" + transferStatusId;
+            transferStatus = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
+                    TransferStatus.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+
+        return transferStatus;
+    }
+    public TransferType getTransferTypeById(int transferTypeId) {
+        TransferType transferType = null;
+        try {
+            String url = API_BASE_URL + "/transfertype/" + transferTypeId;
+            transferType = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
+                    TransferType.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferType;
     }
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();

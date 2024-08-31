@@ -9,6 +9,23 @@ public class Transfer {
     private int accountFrom;
     private int accountTo;
     private BigDecimal amount;
+    private String username;
+
+    public int getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public int getId() {
         return transferId;
