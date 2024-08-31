@@ -80,9 +80,10 @@ public class ConsoleService {
     }
 
    public void displayUsersFrame(){
-       System.out.println("-------------------------------------------\n" +
-               "Users\n" + "ID          Name\n" +
-               "-------------------------------------------");
+       System.out.println(toString() + "\n" + "Users\n" + "ID          Name\n" + toString());
+   }
+   public void displayPendingTransaction(){
+        System.out.println(toString() + "\n" + "Pending\n" + "ID          Name\n" + toString());
    }
 
    public String toString(){
@@ -90,13 +91,13 @@ public class ConsoleService {
         return frame;
    }
    public void displayTransfer(int transfer_id, String transfer_type, String transfer_status_type, String account_from, String account_to, BigDecimal amount){
-        System.out.print(toString() + "\n Transfer Details \n" + toString());
-        System.out.print("Transfer_id: " + transfer_id);
-        System.out.print("From: " + account_from );
-        System.out.print("To: " + account_to);
-        System.out.print("Transfer type: " + transfer_type);
-        System.out.print("Transfer status type: " + transfer_status_type);
-        System.out.print("Amount: " + amount);
+        System.out.println(toString() + "\n Transfer Details \n" + toString());
+        System.out.println("Transfer_id: " + transfer_id);
+        System.out.println("From: " + account_from );
+        System.out.println("To: " + account_to);
+        System.out.println("Transfer type: " + transfer_type);
+        System.out.println("Transfer status type: " + transfer_status_type);
+        System.out.println("Amount: " + amount);
 
    }
 

@@ -7,6 +7,7 @@ import com.techelevator.tenmo.dao.TransferTypeDAO;
 import com.techelevator.tenmo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
@@ -64,7 +65,7 @@ public class AppController {
     }
     @PreAuthorize("permitAll")
     @GetMapping(path = "username/{id}")
-    String getUsernameByAccountId(int account_id){
+    String getUsernameByAccountId(@PathVariable int account_id){
         return accountDAO.getUsernameByAccountId(account_id);
     }
 
