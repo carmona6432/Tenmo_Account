@@ -26,9 +26,9 @@ public class JdbcAccountDAO implements AccountDAO {
     @Override
     public Account getAccount(String username) {
         Account account = null;
-        String query = "select account.account_id,account.user_id,account.balance from account " +
-                "join tenmo_user on account.user_id = tenmo_user.user_id " +
-                "where username = ?;";
+        String query = "SELECT account.account_id,account.user_id,account.balance FROM account " +
+                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
+                "WHERE username = ?;";
         try{
             SqlRowSet results = template.queryForRowSet(query,username);
             if(results.next()){
@@ -92,18 +92,14 @@ public class JdbcAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void updateAccount(Account account, int amount, int from_account, int to_account) {
-        String sql = "update account set balance = balance - ? where account_id = ?";
-        String sql1 = "update account set balance = balance + ? where account_id = ?;";
+    public void updateAccount(BigDecimal amount, int fromAccount, int toAccount) {
+        String sql = "UPDATE account SET balance = balance - ? WHERE account_id = ?";
+        String sql1 = "UPDATE account SET balance = balance + ? WHERE account_id = ?;";
         try{
-            int numberOfRows = template.update(sql,account.getBalance(), amount, from_account);
-            int numberOfRows1 = template.update(sql1,account.getBalance(),amount, to_account);
+            int numberOfRows = template.update(sql, amount, fromAccount);
+            int numberOfRows1 = template.update(sql1,amount, toAccount);
             if(numberOfRows == 0){
                 throw new DaoException("Zero rows affected, expected at least one");
-            } else{
-                getAccountByAccountId(numberOfRows);
-                getAccountByAccountId(numberOfRows1);
-
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");

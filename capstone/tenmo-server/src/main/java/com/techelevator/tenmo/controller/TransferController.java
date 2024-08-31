@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.controller;
 
+import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferUsername;
@@ -15,6 +16,11 @@ import java.util.List;
 public class TransferController {
     @Autowired
     private TransferDAO transferDAO;
+    private AccountDAO accountDAO;
+    public TransferController(TransferDAO transferDAO, AccountDAO accountDAO){
+        this.transferDAO = transferDAO;
+        this.accountDAO = accountDAO;
+    }
     @GetMapping(path = "transfers/{id}")
     public Transfer getTransferByTransferId(int transferId){
         return transferDAO.getTransferByTransferId(transferId);
@@ -35,7 +41,9 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers")
     public void createTransfer(@RequestBody Transfer transfer){
+        Transfer newTransfer = new Transfer(transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountTo(), transfer.getAccountFrom(), transfer.getAmount());
         transferDAO.createTransfer(transfer);
+        accountDAO.updateAccount(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
     }
 
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)

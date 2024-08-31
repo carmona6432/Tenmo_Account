@@ -74,6 +74,7 @@ public class App {
             consoleService.printErrorMessage();
         }
         accountService.setToken(currentUser.getToken());
+        transferService.setToken(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -145,10 +146,14 @@ public class App {
         Account recipientAccount = accountService.getAccountByUserId(userId);
         if (recipientAccount == null) {
             System.out.println("Recipient not found.");
+            return;
         }
         if (recipientAccount.getUserId() == currentUser.getUser().getId()) {
             System.out.println("Can't send money to yourself Dumb Dumb.");
+            return;
         }
+        int toAccountId = recipientAccount.getAccountId();
+
         BigDecimal balance = accountService.getAccount().getBalance();
         System.out.println(consoleService.toString() + "\nAvailable Balance: $" + balance);
 
@@ -161,13 +166,12 @@ public class App {
             System.out.println("Insufficient balance.");
             return;
         }
-//        boolean success = transfer.executeTransfer(accountService.getAccount(), recipientAccount, amount);
-//
-//        if (success) {
-//            System.out.println("Transfer successful!");
-//        } else {
-//            System.out.println("Transfer failed.");
-//        }
+        transfer.setTransferTypeId(2);
+        transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
+        transfer.setAccountTo(recipientAccount.getAccountId());
+        transfer.setAmount(amount);
+        transfer.setTransferStatusId(2);
+        transferService.sendTransfer(transfer);
         }
 
 	private void requestBucks() {
