@@ -11,5 +11,5 @@ public interface TransferDAO {
     Transfer getTransferByTransferId(int transferId);
     List<TransferUsername> getPendingTransfersById(int userId);
     Transfer updateTransfer(Transfer transfer);
-    void createTransfer(Transfer transfer);
+    Transfer createTransfer(Transfer transfer);
 }

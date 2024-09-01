@@ -142,7 +142,7 @@ public class App {
         for (Account account : accountService.getAccounts()) {
             System.out.println(account.getUserId() + "        " + account.getUsername());
         }
-        Integer userId = consoleService.promptForInt("Please Enter Recipient Id: ");
+        int userId = consoleService.promptForInt("Please Enter Recipient Id: ");
         Account recipientAccount = accountService.getAccountByUserId(userId);
         if (recipientAccount == null) {
             System.out.println("Recipient not found.");
@@ -171,7 +171,8 @@ public class App {
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
         transfer.setTransferStatusId(2);
-        transferService.sendTransfer(transfer);
+        Transfer createTransfer = transferService.sendTransfer(transfer);
+        consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
         }
 
 	private void requestBucks() {
