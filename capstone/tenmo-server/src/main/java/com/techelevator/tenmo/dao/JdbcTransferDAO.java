@@ -18,7 +18,6 @@ public class JdbcTransferDAO implements TransferDAO {
     public JdbcTransferDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
     public List<Transfer> getTransfersFromAccount(int accountId) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "select transfer.transfer_id, transfer.transfer_type_id, transfer.transfer_status_id, " +
@@ -114,17 +113,20 @@ public class JdbcTransferDAO implements TransferDAO {
         }
 
         @Override
-        public void createTransfer (Transfer transfer){
-            String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                    "VALUES (?, ?, ?, ?, ?);";
+        public Transfer createTransfer (Transfer transfer){
+            Transfer createTransfer = null;
+            int transferId = 0;
+            String sql = "INSERT INTO transfer (transfer_id,transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                    "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
             try {
-                jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFrom(),
-                        transfer.getAccountTo(), transfer.getAmount());
+               transferId = jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFrom(),
+                        transfer.getAccountTo(), transfer.getAmount(), transfer.getTransferId());
             } catch (CannotGetJdbcConnectionException e) {
                 System.out.println("Connection Error");
             } catch (DataIntegrityViolationException e) {
                 System.out.println("Data Problem");
             }
+            return getTransferByTransferId(transferId);
         }
 
         private Transfer mapRowToTransfer (SqlRowSet sqlRowSet){

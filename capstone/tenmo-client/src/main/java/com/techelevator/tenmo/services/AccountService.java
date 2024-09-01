@@ -126,6 +126,21 @@ public class AccountService {
         }
         return account;
     }
+    public String getUsernameByAccountId(int accountId) {
+
+        String account = null;
+        try {
+            account = restTemplate.exchange(API_BASE_URL + "username/" + accountId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    String.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return account;
+    }
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
