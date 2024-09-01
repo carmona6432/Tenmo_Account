@@ -175,15 +175,42 @@ public class App {
         }
 
 	private void requestBucks() {
+        Transfer transfer = new Transfer();
         consoleService.displayUsersFrame();
         for (Account account : accountService.getAccounts()) {
             System.out.println(account.getUserId() + "        " + account.getUsername());
         }
-        int user_id = consoleService.promptForInt("Please Enter Recipient Id:");
+        int userId = consoleService.promptForInt("Please Enter Recipient Id:");
         BigDecimal amount = consoleService.promptForBigDecimal("Please Enter The Amount You would like to request $");
-        //createTransferMethod
+        Account recipientAccount = accountService.getAccountByUserId(userId);
+        if (recipientAccount.getUserId() == currentUser.getUser().getId()) {
+            System.out.println("You cannot request TE Bucks from yourself.");
+            return;
+        }
 
-	}
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            System.out.println("The amount must be greater than zero.");
+            return;
+        }
+        if (recipientAccount == null) {
+            System.out.println("Recipient ID is not valid.");
+            return;
+        }
+        transfer.setTransferTypeId(2);
+        transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
+        transfer.setAccountTo(recipientAccount.getAccountId());
+        transfer.setAmount(amount);
+        transfer.setTransferStatusId(2);
+        transferService.sendTransfer(transfer);
+
+        try {
+            transferService.createTransfer(transfer);
+            System.out.println("Transfer request sent successfully.");
+        } catch (Exception e) {
+            System.out.println("Error creating transfer request: " + e.getMessage());
+        }
+    }
+
     //The following method can be called to make a log of a transfer
     private void logChange(String action, double amount, double newBalance) {
         // Establish date and time

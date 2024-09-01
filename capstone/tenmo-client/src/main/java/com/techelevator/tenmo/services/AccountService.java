@@ -55,7 +55,7 @@ public class AccountService {
     public Account getAccount(){
         Account account = null;
         try {
-            account = restTemplate.exchange(API_BASE_URL + "accounts",
+            account = restTemplate.exchange(API_BASE_URL + "accounts                                  ",
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class).getBody();
