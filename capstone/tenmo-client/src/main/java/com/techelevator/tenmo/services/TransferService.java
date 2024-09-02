@@ -5,14 +5,12 @@ import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferStatus;
 import com.techelevator.tenmo.model.TransferType;
 import com.techelevator.tenmo.model.login.AuthenticatedUser;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class TransferService {
         Transfer transfer = null;
         try {
             transfer = restTemplate.exchange(
-                    API_BASE_URL + "transfers",
+                    API_BASE_URL + "transfers/send",
                     HttpMethod.POST,
                     makeAuthEntity(sent),
                     Transfer.class

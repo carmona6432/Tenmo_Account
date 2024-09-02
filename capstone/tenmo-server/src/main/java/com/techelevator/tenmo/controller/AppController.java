@@ -38,6 +38,11 @@ public class AppController {
         String username = user.getName();
         return accountDAO.getAccounts(username);
     }
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @PutMapping(path = "accounts/transfer")
+     public void UpdateAccounts(BigDecimal amount, int fromAccount, int toAccount){
+        accountDAO.updateAccount(amount,fromAccount,toAccount);
+    }
     @GetMapping(path="/transfertype/sort")
     public TransferType getTransferTypeByDescription(@RequestParam String description) {
        return transferTypeDAO.getTransferTypeByDescription(description);
@@ -57,9 +62,9 @@ public class AppController {
         return transferTypeDAO.getTransferTypeById(id);
     }
     @PreAuthorize("permitAll")
-    @GetMapping(path = "username/{id}")
-    String getUsernameByAccountId(@PathVariable int account_id){
-        return accountDAO.getUsernameByAccountId(account_id);
+    @GetMapping(path ="/username/{id}")
+    public String getUsernameByUserId(@PathVariable int id){
+        return accountDAO.getUsernameByUserId(id);
     }
 
 

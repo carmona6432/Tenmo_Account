@@ -97,7 +97,7 @@ public class ConsoleService {
         System.out.println("To: " + account_to);
         System.out.println("Transfer type: " + transfer_type);
         System.out.println("Transfer status type: " + transfer_status_type);
-        System.out.println("Amount: " + amount);
+        System.out.println("Amount: $" + amount);
 
    }
 

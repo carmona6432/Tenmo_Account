@@ -55,7 +55,7 @@ public class AccountService {
     public Account getAccount(){
         Account account = null;
         try {
-            account = restTemplate.exchange(API_BASE_URL + "accounts",
+            account = restTemplate.exchange(API_BASE_URL + "accounts                                  ",
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class).getBody();
@@ -119,6 +119,21 @@ public class AccountService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return account;
+    }
+    public String getUsernameByAccountId(int accountId) {
+
+        String account = null;
+        try {
+            account = restTemplate.exchange(API_BASE_URL + "username/" + accountId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    String.class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
