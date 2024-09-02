@@ -208,7 +208,6 @@ public class App {
         request.setAccountTo(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
         request.setAmount(amount);
         request.setTransferStatusId(1);
-
         try {
             transferService.sendRequest(request);
             System.out.println("Transfer request sent successfully.");
