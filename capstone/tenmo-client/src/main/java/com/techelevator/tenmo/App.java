@@ -170,7 +170,7 @@ public class App {
         transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
-        transfer.setTransferStatusId(2);
+        transfer.setTransferStatusId(1);
         Transfer createTransfer = transferService.sendTransfer(transfer);
         consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
         }
@@ -201,7 +201,7 @@ public class App {
         transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
-        transfer.setTransferStatusId(2);
+        transfer.setTransferStatusId(1);
 
         try {
             transferService.sendTransfer(transfer);
