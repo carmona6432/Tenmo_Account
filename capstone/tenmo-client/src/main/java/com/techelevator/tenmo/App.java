@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -131,8 +132,7 @@ public class App {
 
 	private void viewPendingRequests() {
         int code = consoleService.promptForInt(consoleService.toString() + "\n1. View Pending Transfer" + "\n" + "2. Accept Pending Transfer" + "\n" + "3.Reject Pending Transfer" + "\n" + consoleService.toString() + "\n");
-        if(code == 1){
-
+        if(code == 1) {
         }
 //        int id = accountService.getAccount().getAccountId();
 //        Transfer[] pendingRequests = transferService.getPendingRequests(id);
@@ -183,41 +183,48 @@ public class App {
         transferService.sendTransfer(transfer);
 
         consoleService.displayTransfer(transferService.sendTransfer(transfer).getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
+        transferService.sendTransfer(transfer);
+//        Transfer createTransfer = transferService.sendTransfer(transfer);
+//        consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
         }
 
 	private void requestBucks() {
-        Transfer transfer = new Transfer();
+        Transfer request = new Transfer();
         consoleService.displayUsersFrame();
         for (Account account : accountService.getAccounts()) {
             System.out.println(account.getUserId() + "        " + account.getUsername());
         }
-        int userId = consoleService.promptForInt("Please Enter Recipient Id:");
-        BigDecimal amount = consoleService.promptForBigDecimal("Please Enter The Amount You would like to request $");
+        int userId = consoleService.promptForInt("Please Enter Recipient Id: ");
         Account recipientAccount = accountService.getAccountByUserId(userId);
         if (recipientAccount.getUserId() == currentUser.getUser().getId()) {
             System.out.println("You cannot request TE Bucks from yourself.");
-            return;
-        }
-
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            System.out.println("The amount must be greater than zero.");
             return;
         }
         if (recipientAccount == null) {
             System.out.println("Recipient ID is not valid.");
             return;
         }
-        transfer.setTransferTypeId(1);
-        transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
-        transfer.setAccountTo(recipientAccount.getAccountId());
-        transfer.setAmount(amount);
-        transfer.setTransferStatusId(1);
-        transferService.sendRequest(transfer);
+        BigDecimal amount = consoleService.promptForBigDecimal("Please Enter The Amount You would like to request $");
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            System.out.println("The amount must be greater than zero.");
+            return;
+        }
+        request.setTransferTypeId(1);
+        request.setAccountFrom(recipientAccount.getAccountId());
+        request.setAccountTo(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
+        request.setAmount(amount);
+        request.setTransferStatusId(1);
 
+        try {
+            transferService.sendRequest(request);
+            System.out.println("Transfer request sent successfully.");
+        } catch (Exception e) {
+            System.out.println("Error creating transfer request");
+        }
     }
     private void approveOrRejectTransfer() {
         viewPendingRequests();
-        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId(currentUser.getUser().getId());
+        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId();
 
         if (pendingTransfers.isEmpty()) {
             System.out.println("You have no pending transfer requests.");

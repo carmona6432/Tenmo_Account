@@ -32,8 +32,8 @@ public class AppController {
     }
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     @PutMapping(path = "accounts/transfer")
-     public void UpdateAccounts(BigDecimal amount, int fromAccount, int toAccount){
-        accountDAO.updateAccount(amount,fromAccount,toAccount);
+     public void updateBalance(BigDecimal amount, int fromAccount, int toAccount){
+        accountDAO.updateBalance(amount,fromAccount,toAccount);
     }
 
     @PreAuthorize("permitAll")
@@ -41,6 +41,8 @@ public class AppController {
     public String getUsernameByUserId(@PathVariable int id){
         return accountDAO.getUsernameByUserId(id);
     }
-
-
+    @PostMapping(path = "accounts/{id}")
+    public Account updateAccount(Account account) {
+        return accountDAO.updateAccount(account);
+    }
 }

@@ -44,21 +44,22 @@ public class TransferController {
     public void sendTransfer(@RequestBody Transfer transfer) {
         Transfer newTransfer = new Transfer(transfer.getTransferTypeId(), transfer.getTransferStatusId(),
                 transfer.getAccountTo(), transfer.getAccountFrom(), transfer.getAmount());
-        transferDAO.createTransfer(transfer);
         accountDAO.updateAccount(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+        transferDAO.createTransfer(transfer);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers/request")
     public void createTransfer(@RequestBody Transfer transfer){
-       transferDAO.createTransfer(transfer);
-    }
+       transferDAO.createTransfer(transfer);}
+
 
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     @PutMapping(path = "transfers/{id}")
     public Transfer updateTransfer(@PathVariable int id, @RequestBody Transfer transfer){
         return transferDAO.updateTransfer(transfer);
     }
+
     @PreAuthorize("permitAll")
     @GetMapping(path="transferstatus/{id}")
     public String getTransferStatusById(@PathVariable int id) {
