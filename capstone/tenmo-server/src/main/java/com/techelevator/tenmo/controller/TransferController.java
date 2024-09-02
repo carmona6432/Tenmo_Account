@@ -3,7 +3,6 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferUsername;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +34,7 @@ public class TransferController {
         return transferDAO.getTransfersToAccount(id);
     }
     @GetMapping(path = "transfers/pending/{id}")
-    public List<TransferUsername> getPendingTransfersById(@PathVariable int id){
+    public List<Transfer> getPendingTransfersById(@PathVariable int id){
         return transferDAO.getPendingTransfersById(id);
     }
     @ResponseStatus(HttpStatus.CREATED)
