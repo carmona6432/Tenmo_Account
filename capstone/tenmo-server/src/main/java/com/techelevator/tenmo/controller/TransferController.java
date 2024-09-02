@@ -38,6 +38,15 @@ public class TransferController {
         return transferDAO.getPendingTransfersById(id);
     }
     @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(path = "transfers/send")
+    public void sendTransfer(@RequestBody Transfer transfer) {
+        Transfer newTransfer = new Transfer(transfer.getTransferTypeId(), transfer.getTransferStatusId(),
+                transfer.getAccountTo(), transfer.getAccountFrom(), transfer.getAmount());
+        transferDAO.createTransfer(transfer);
+        accountDAO.updateAccount(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers")
     public Transfer createTransfer(@RequestBody Transfer transfer){
        return transferDAO.createTransfer(transfer);

@@ -42,7 +42,7 @@ public class TransferService {
         Transfer transfer = null;
         try {
             transfer = restTemplate.exchange(
-                    API_BASE_URL + "transfers",
+                    API_BASE_URL + "transfers/send",
                     HttpMethod.POST,
                     makeAuthEntity(),
                     Transfer.class

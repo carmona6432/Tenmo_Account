@@ -11,6 +11,7 @@ public interface TransferDAO {
     List<Transfer> getPendingTransfersById(int userId);
     Transfer updateTransfer(Transfer transfer);
     Transfer createTransfer(Transfer transfer);
+    void sendTransfer(Transfer transfer);
     String getTransferStatusById(int transferStatusId);
     String getTransferTypeById(int transferId);
 }
