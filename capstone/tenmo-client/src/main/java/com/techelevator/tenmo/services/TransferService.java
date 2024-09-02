@@ -122,13 +122,13 @@ public class TransferService {
         return transferUsername;
     }
 
-    public TransferUsername[] getPendingRequests(int id) {
-        TransferUsername[] transferUsername = null;
+    public Transfer[] getPendingRequests(int id) {
+        Transfer[] transferUsername = null;
         try {
             transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    TransferUsername[].class).getBody();
+                    Transfer[].class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
@@ -33,9 +34,10 @@ public class TransferController {
     public List<Transfer> getTransferToAccount (@PathVariable int id) {
         return transferDAO.getTransfersToAccount(id);
     }
-    @GetMapping(path = "transfers/pending/{id}")
-    public List<Transfer> getPendingTransfersById(@PathVariable int id){
-        return transferDAO.getPendingTransfersById(id);
+    @GetMapping(path = "transfers/pending")
+    public List<Transfer> getPendingTransfersById(Principal user){
+        String username = user.getName();
+        return transferDAO.getPendingTransfersById(username);
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers")

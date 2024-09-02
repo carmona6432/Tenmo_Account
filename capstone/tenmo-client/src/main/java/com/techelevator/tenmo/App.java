@@ -131,8 +131,8 @@ public class App {
 
 	private void viewPendingRequests() {
         int id = accountService.getAccount().getAccountId();
-        TransferUsername[] pendingRequests = transferService.getPendingRequests(id);
-        for(TransferUsername request : pendingRequests) {
+        Transfer[] pendingRequests = transferService.getPendingRequests(id);
+        for(Transfer request : pendingRequests) {
             System.out.println(consoleService.toString() + "\n" + request.getTransferId() + " " +
                     request.getUsername() +
                     " $" + request.getAmount() + "\n" + consoleService.toString());
