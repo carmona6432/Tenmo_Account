@@ -83,7 +83,7 @@ public class JdbcTransferDAO implements TransferDAO {
     @Override
     public List<Transfer> getPendingTransfersById(String username) {
             List<Transfer> pendingTransfers = new ArrayList<>();
-            String sql = "SELECT * FROM transfer ts " +
+            String sql = "SELECT ts.transfer_id,ts.transfer_type_id, ts.transfer_status_id, ts.account_from, ts.account_to, ts.amount FROM transfer ts " +
                     "JOIN account ac ON ac.account_id = ts.account_to " +
                     "JOIN tenmo_user tu ON tu.user_id = ac.user_id " +
                     "WHERE username = ? " +

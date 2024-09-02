@@ -109,7 +109,7 @@ public class App {
 
 	private void viewTransferHistory() {
         Transfer[] transfers;
-        int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + "3.Look up transfer by transfer id" + consoleService.toString() + "\n");
+        int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + "3.Look up transfer by transfer id\n" + consoleService.toString() + "\n");
         if (code == 1) {
             int id = accountService.getAccount().getAccountId();
             transfers = transferService.getTransfersToAccount(id);
@@ -195,10 +195,10 @@ public class App {
         transfer.setAmount(amount);
         transfer.setTransferStatusId(2);
         transfer.setTransferStatusId(1);
+        int g = transfer.getTransferId();
         transferService.sendTransfer(transfer);
 
-        consoleService.displayTransfer(transferService.sendTransfer(transfer).getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
-        transferService.sendTransfer(transfer);
+        consoleService.displayTransfer(g,transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
 //        Transfer createTransfer = transferService.sendTransfer(transfer);
 //        consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
         }
