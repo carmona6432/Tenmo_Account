@@ -48,4 +48,14 @@ public class TransferController {
     public Transfer updateTransfer(@PathVariable int id, @RequestBody Transfer transfer){
         return transferDAO.updateTransfer(transfer);
     }
+    @PreAuthorize("permitAll")
+    @GetMapping(path="transferstatus/{id}")
+    public String getTransferStatusById(@PathVariable int id) {
+        return transferDAO.getTransferStatusById(id);
+    }
+    @PreAuthorize("permitAll")
+    @GetMapping(path="transfertype/{id}")
+    public String getTransferTypeById(@PathVariable int id) {
+        return transferDAO.getTransferTypeById(id);
+    }
 }

@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -103,11 +104,23 @@ public class JdbcTransferDAO implements TransferDAO {
 
         @Override
         public Transfer updateTransfer (Transfer transfer){
+        Transfer updateTransfer = null;
             String sql = "UPDATE transfers " +
                     "SET transfer_status_id = ?" +
                     "WHERE transfer_id = ?;";
-            jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getId());
-            return null;
+            int numOfRows =jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getId());
+            try {
+                if (numOfRows == 1) {
+                    updateTransfer = getTransferByTransferId(transfer.getTransferId());
+                } else {
+                    throw new DaoException("Transfer not found", new Exception());
+                }
+            } catch (CannotGetJdbcConnectionException e) {
+                System.out.println("Connection Error");
+            } catch (DataIntegrityViolationException e) {
+                System.out.println("Data Problem");
+            }
+            return updateTransfer;
         }
 
         @Override
@@ -126,6 +139,28 @@ public class JdbcTransferDAO implements TransferDAO {
             }
             return getTransferByTransferId(transferId);
         }
+    @Override
+    public String getTransferStatusById(int transferStatusId) {
+        String sql = "SELECT transfer_status_id, transfer_status_desc " +
+                "FROM transfer_status WHERE transfer_status_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferStatusId);
+        String transferStatus = null;
+        if (result.next()) {
+            transferStatus = result.getString("transfer_status_desc");
+        }
+        return transferStatus;
+    }
+    @Override
+    public String getTransferTypeById(int transferTypeId) {
+        String sql = "SELECT transfer_type_id, transfer_type_desc " +
+                "FROM transfer_type WHERE transfer_type_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferTypeId);
+        String  transferType = null;
+        if (result.next()) {
+            transferType = result.getString("transfer_type_desc");
+        }
+        return transferType;
+    }
 
         private Transfer mapRowToTransfer (SqlRowSet sqlRowSet){
             Transfer transfer = new Transfer();

@@ -38,6 +38,7 @@ public class App {
         loginMenu();
         if (currentUser != null) {
             accountService.setToken(currentUser.getToken());
+            transferService.setToken(currentUser.getToken());
             mainMenu();
         }
     }
@@ -73,8 +74,6 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
-        accountService.setToken(currentUser.getToken());
-        transferService.setToken(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -109,25 +108,30 @@ public class App {
 
 	private void viewTransferHistory() {
         Transfer[] transfers;
-        int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + consoleService.toString() + "\n");
+        int code = consoleService.promptForInt(consoleService.toString() + "\n1. Received" + "\n" + "2. Sent" + "\n" + "3.Look up transfer by transfer id" + consoleService.toString() + "\n");
         if (code == 1) {
             int id = accountService.getAccount().getAccountId();
-            transfers = accountService.getTransfersToAccount(id);
+            transfers = transferService.getTransfersToAccount(id);
             for (Transfer transfer : transfers) {
                 consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),currentUser.getUser().getUsername(),transfer.getUsername(),transfer.getAmount());
             }
         } else if (code == 2) {
             int id = accountService.getAccount().getAccountId();
-            transfers = accountService.getTransfersFromAccount(id);
+            transfers = transferService.getTransfersFromAccount(id);
             for (Transfer transfer : transfers) {
                 consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),transfer.getUsername(),currentUser.getUser().getUsername(),transfer.getAmount());
             }
+        } else if (code == 3){
+            int id = consoleService.promptForInt("Please enter transfer id: ");
+            Transfer transfer = transferService.getTransferById(id);
+            consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),accountService.getUsernameByAccountId(transfer.getAccountFrom()),accountService.getUsernameByAccountId(transfer.getAccountTo()),transfer.getAmount());
+
         }
     }
 
 	private void viewPendingRequests() {
         int id = accountService.getAccount().getAccountId();
-        TransferUsername[] pendingRequests = accountService.getPendingRequests(id);
+        TransferUsername[] pendingRequests = transferService.getPendingRequests(id);
         for(TransferUsername request : pendingRequests) {
             System.out.println(consoleService.toString() + "\n" + request.getTransferId() + " " +
                     request.getUsername() +
