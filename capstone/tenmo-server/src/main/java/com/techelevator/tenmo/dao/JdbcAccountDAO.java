@@ -2,7 +2,6 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import javax.sql.RowSet;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,29 +115,6 @@ public class JdbcAccountDAO implements AccountDAO {
             user = result.getString("username");
         }
         return user;
-    }
-    @Override
-    public Account updateAccount(Account account) {
-        Account updatedAcc = null;
-        String sql = "UPDATE account SET user_id = ?, balance = ?, username = ?, " +
-                "WHERE account_id = ?;";
-
-        try {
-            int numberOfRows = template.update(sql, account.getAccountId(), account.getUserId(),
-                    account.getBalance(), account.getUsername());
-
-            if (numberOfRows == 0) {
-                throw new DaoException("Zero rows affected, expected at least one");
-            } else {
-                updatedAcc = getAccountByAccountId(account.getAccountId());
-            }
-
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
-        }
-        return updatedAcc;
     }
 
     private Account mapRowToAccount (SqlRowSet sqlRowSet) {
