@@ -44,9 +44,9 @@ public class TransferService {
             transfer = restTemplate.exchange(
                     API_BASE_URL + "transfers/send",
                     HttpMethod.POST,
-                    makeAuthEntity(),
+                    makeAuthEntity(sent),
                     Transfer.class
-            ).getBody();
+                    ).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -165,12 +165,19 @@ public class TransferService {
         return transferUsername;
     }
 
-            private HttpEntity<Void> makeAuthEntity () {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.setBearerAuth(token);
-                return new HttpEntity<>(headers);
-            }
+    private HttpEntity<Transfer> makeAuthEntity(Transfer transfer) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(transfer, headers);
+    }
+
+    private HttpEntity<Void> makeAuthEntity () {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(headers);
+    }
 
 }
 
