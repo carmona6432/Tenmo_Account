@@ -20,7 +20,7 @@ public class AccountService {
 
     private String token;
     private RestTemplate restTemplate = new RestTemplate();
-    private final String API_BASE_URL = "http://localhost:8080/";
+    private static String API_BASE_URL = "http://localhost:8080/";
     public void setToken(String token) {
         this.token = token;
     }
@@ -111,7 +111,21 @@ public class AccountService {
         }
         return account;
     }
+    public boolean updateAccount(Account updatedAccount) {
+        RestTemplate restTemplate = new RestTemplate();
 
+        try {
+            restTemplate.put(API_BASE_URL + "accounts/" + updatedAccount.getAccountId(),
+                    makeAuthEntity(),
+                    Account.class);
+            return true;
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return false;
+    }
     public Account getAccountByUserId(int userId) {
 
         Account account = null;
