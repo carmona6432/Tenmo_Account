@@ -41,7 +41,8 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers")
     public void createTransfer(@RequestBody Transfer transfer){
-        Transfer newTransfer = new Transfer(transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountTo(), transfer.getAccountFrom(), transfer.getAmount());
+        Transfer newTransfer = new Transfer(transfer.getTransferTypeId(), transfer.getTransferStatusId(), 
+                transfer.getAccountTo(), transfer.getAccountFrom(), transfer.getAmount());
         transferDAO.createTransfer(transfer);
         accountDAO.updateAccount(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
     }
