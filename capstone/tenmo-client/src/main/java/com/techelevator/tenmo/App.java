@@ -197,7 +197,7 @@ public class App {
             System.out.println("Recipient ID is not valid.");
             return;
         }
-        transfer.setTransferTypeId(2);
+        transfer.setTransferTypeId(1);
         transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);

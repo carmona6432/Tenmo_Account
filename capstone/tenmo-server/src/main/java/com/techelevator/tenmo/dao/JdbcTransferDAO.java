@@ -1,7 +1,6 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferUsername;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -81,8 +80,8 @@ public class JdbcTransferDAO implements TransferDAO {
         return transfer;
     }
     @Override
-    public List<TransferUsername> getPendingTransfersById(int userId) {
-            List<TransferUsername> pendingTransfers = new ArrayList<>();
+    public List<Transfer> getPendingTransfersById(int userId) {
+            List<Transfer> pendingTransfers = new ArrayList<>();
             String sql = "SELECT transfer_id, username, amount FROM transfer ts " +
                     "JOIN account ac ON ac.account_id = ts.account_to " +
                     "JOIN tenmo_user tu ON tu.user_id = ac.user_id " +
@@ -92,8 +91,7 @@ public class JdbcTransferDAO implements TransferDAO {
                 SqlRowSet results = jdbcTemplate.queryForRowSet(sql,userId);
 
                 while (results.next()) {
-                    TransferUsername transfer = mapRow(results);
-                    pendingTransfers.add(transfer);
+                    pendingTransfers.add(mapRowWithUsername(results));
                 }
             } catch (CannotGetJdbcConnectionException e) {
                 System.out.println("Problem connecting");
@@ -116,7 +114,7 @@ public class JdbcTransferDAO implements TransferDAO {
         public Transfer createTransfer (Transfer transfer){
             Transfer createTransfer = null;
             int transferId = 0;
-            String sql = "INSERT INTO transfer (transfer_id,transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+            String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                     "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
             try {
                transferId = jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFrom(),
@@ -146,14 +144,6 @@ public class JdbcTransferDAO implements TransferDAO {
             transfer.setTransferStatusId(sqlRowSet.getInt("transfer_status_id"));
             transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
             transfer.setUsername(sqlRowSet.getString("username"));
-            return transfer;
-        }
-
-        private TransferUsername mapRow (SqlRowSet sqlRowSet){
-            TransferUsername transfer = new TransferUsername();
-            transfer.setTransferId(sqlRowSet.getInt("transfer_id"));
-            transfer.setUsername(sqlRowSet.getString("username"));
-            transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
             return transfer;
         }
     }
