@@ -55,6 +55,23 @@ public class TransferService {
         return transfer;
     }
 
+    public Transfer sendRequest(Transfer request) {
+        Transfer transfer = null;
+        try {
+            transfer = restTemplate.exchange(
+                    API_BASE_URL + "transfers/request",
+                    HttpMethod.POST,
+                    makeAuthEntity(request),
+                    Transfer.class
+            ).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfer;
+    }    
+
     public boolean updateTransfer(Transfer transfer) {
         boolean isUpdated = false;
         try {

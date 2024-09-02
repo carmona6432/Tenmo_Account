@@ -10,8 +10,11 @@ public interface TransferDAO {
     Transfer getTransferByTransferId(int transferId);
     List<Transfer> getPendingTransfersById(int userId);
     Transfer updateTransfer(Transfer transfer);
-    Transfer createTransfer(Transfer transfer);
+    void createTransfer(Transfer transfer);
     void sendTransfer(Transfer transfer);
+
+    void sendRequest(Transfer transferRequest);
+
     String getTransferStatusById(int transferStatusId);
     String getTransferTypeById(int transferId);
 }
