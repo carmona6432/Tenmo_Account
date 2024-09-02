@@ -78,7 +78,12 @@ public class ConsoleService {
             }
         }
     }
-
+    public void printPendingRequests() {
+        System.out.println("-------------------------------------------");
+        System.out.println("Pending Transfers");
+        System.out.println("ID          To                     Amount");
+        System.out.println("-------------------------------------------");
+    }
    public void displayUsersFrame(){
        System.out.println(toString() + "\n" + "Users\n" + "ID          Name\n" + toString());
    }

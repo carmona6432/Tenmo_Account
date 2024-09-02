@@ -189,7 +189,7 @@ public class TransferService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);
         return new HttpEntity<>(headers);
-            }
     }
 }
+
 

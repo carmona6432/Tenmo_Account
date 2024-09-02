@@ -131,8 +131,23 @@ public class App {
     }
 
 	private void viewPendingRequests() {
-        int code = consoleService.promptForInt(consoleService.toString() + "\n1. View Pending Transfer" + "\n" + "2. Accept Pending Transfer" + "\n" + "3.Reject Pending Transfer" + "\n" + consoleService.toString() + "\n");
-        if(code == 1) {
+        int id = accountService.getAccount().getAccountId();
+        List<Transfer> pendingRequests = transferService.getPendingRequests(id);
+        if (pendingRequests.isEmpty()) {
+            System.out.println("You have no pending transfer requests.");
+            return;
+        }
+        consoleService.printPendingRequests();
+        for (Transfer request : pendingRequests) {
+            System.out.printf("%-12d%-23s$ %7.2f%n",
+                    request.getTransferId(),
+                    request.getUsername(),
+                    request.getAmount());
+        }
+        System.out.println("---------");
+        int transferId = consoleService.promptForInt("Please enter transfer ID to approve/reject (0 to cancel): ");
+        if (transferId != 0) {
+            approveOrRejectTransfer(transferId);
         }
 //        int id = accountService.getAccount().getAccountId();
 //        Transfer[] pendingRequests = transferService.getPendingRequests(id);
@@ -221,22 +236,18 @@ public class App {
             System.out.println("Error creating transfer request");
         }
     }
-    private void approveOrRejectTransfer() {
-        viewPendingRequests();
-        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId();
+    private void approveOrRejectTransfer(int transferId) {
+        //viewPendingRequests();
+        //List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId();
 
-        if (pendingTransfers.isEmpty()) {
-            System.out.println("You have no pending transfer requests.");
-            return;
-        }
 
-        for (Transfer transfer : pendingTransfers) {
-            System.out.println("Transfer ID: " + transfer.getTransferId() +
-                    " | From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom()) +
-                    " | Amount: $" + transfer.getAmount());
-        }
 
-        int transferId = consoleService.promptForInt("Enter transfer ID to approve/reject (0 to cancel): ");
+//        for (Transfer transfer : pendingTransfers) {
+//            System.out.println("Transfer ID: " + transfer.getTransferId() +
+//                    " | From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom()) +
+//                    " | Amount: $" + transfer.getAmount());
+//        }
+
         if (transferId == 0) {
             return;
         }
