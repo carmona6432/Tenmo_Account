@@ -110,7 +110,20 @@ public class AccountService {
         }
         return transferUsername;
     }
-
+    public Account getAccountByAccountId(int accountId) {
+        Account account = null;
+        try {
+            account =  restTemplate.exchange(API_BASE_URL + "/accounts/" + accountId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Account.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return account;
+    }
     public Account getAccountByUserId(int userId) {
 
         Account account = null;

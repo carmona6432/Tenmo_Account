@@ -22,7 +22,7 @@ public class TransferService {
     public void setToken(String token) {
         this.token = token;
     }
-    public Transfer transferById(int id){
+    public Transfer getTransferById(int id){
         Transfer transfer = null;
         try{transfer = restTemplate.exchange(
                 API_BASE_URL + "transfers/" + id,
@@ -94,6 +94,23 @@ public class TransferService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return transferType;
+    }
+    public List<Transfer> getPendingTransfersByUserId(int accountId) {
+        List<Transfer> transfers = new ArrayList<>();
+        try{
+            transfers = restTemplate.exchange(API_BASE_URL + "transfers/user/" +
+                            accountId +
+                            "/pending",
+                            HttpMethod.GET,
+                            makeAuthEntity(),
+                            List.class
+                            ).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfers;
     }
     private HttpEntity<Transfer> makeAuthEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
