@@ -130,13 +130,17 @@ public class App {
     }
 
 	private void viewPendingRequests() {
-        int id = accountService.getAccount().getAccountId();
-        Transfer[] pendingRequests = transferService.getPendingRequests(id);
-        for(Transfer request : pendingRequests) {
-            System.out.println(consoleService.toString() + "\n" + request.getTransferId() + " " +
-                    request.getUsername() +
-                    " $" + request.getAmount() + "\n" + consoleService.toString());
+        int code = consoleService.promptForInt(consoleService.toString() + "\n1. View Pending Transfer" + "\n" + "2. Accept Pending Transfer" + "\n" + "3.Reject Pending Transfer" + "\n" + consoleService.toString() + "\n");
+        if(code == 1){
+
         }
+//        int id = accountService.getAccount().getAccountId();
+//        Transfer[] pendingRequests = transferService.getPendingRequests(id);
+//        for(Transfer request : pendingRequests) {
+//            System.out.println(consoleService.toString() + "\n" + request.getTransferId() + " " +
+//                    request.getUsername() +
+//                    " $" + request.getAmount() + "\n" + consoleService.toString());
+//        }
 
 	}
 
@@ -174,16 +178,11 @@ public class App {
         transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
-<<<<<<< HEAD
         transfer.setTransferStatusId(2);
-        transferService.sendTransfer(transfer);
-//        Transfer sendTransfer = transferService.sendTransfer(transfer);
-//        consoleService.displayTransfer(sendTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
-=======
         transfer.setTransferStatusId(1);
-        Transfer createTransfer = transferService.sendTransfer(transfer);
-        consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
->>>>>>> a553925601768f8a52ec5ab83734197d43dce966
+        transferService.sendTransfer(transfer);
+
+        consoleService.displayTransfer(transferService.sendTransfer(transfer).getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
         }
 
 	private void requestBucks() {
@@ -213,13 +212,8 @@ public class App {
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
         transfer.setTransferStatusId(1);
+        transferService.sendRequest(transfer);
 
-        try {
-            transferService.sendTransfer(transfer);
-            System.out.println("Transfer request sent successfully.");
-        } catch (Exception e) {
-            System.out.println("Error creating transfer request");
-        }
     }
     private void approveOrRejectTransfer() {
         viewPendingRequests();
@@ -280,8 +274,8 @@ public class App {
         senderAccount.setBalance(senderNewBalance);
         recipientAccount.setBalance(recipientNewBalance);
 
-        accountService.updateAccount(senderAccount);
-        accountService.updateAccount(recipientAccount);
+//        accountService.updateAccount(senderAccount);
+//        accountService.updateAccount(recipientAccount);
 
         updateTransferStatus(transfer);
         System.out.println("Transfer approved successfully.");

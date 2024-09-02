@@ -142,10 +142,10 @@ public class JdbcTransferDAO implements TransferDAO {
     
     @Override
     public void sendTransfer (Transfer transfer) {
-        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                "VALUES (?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                "VALUES (?, ?, ?, ?, ?, ?);";
         try {
-            jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(),
+            jdbcTemplate.update(sql, transfer.getTransferId(), transfer.getTransferTypeId(), transfer.getTransferStatusId(),
                     transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Connection Error");

@@ -44,7 +44,23 @@ public class TransferService {
             transfer = restTemplate.exchange(
                     API_BASE_URL + "transfers/send",
                     HttpMethod.POST,
-                    makeAuthEntity(),
+                    makeAuthEntity(sent),
+                    Transfer.class
+            ).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfer;
+    }
+    public Transfer sendRequest(Transfer request) {
+        Transfer transfer = null;
+        try {
+            transfer = restTemplate.exchange(
+                    API_BASE_URL + "transfers",
+                    HttpMethod.POST,
+                    makeAuthEntity(request),
                     Transfer.class
             ).getBody();
         } catch (ResourceAccessException e) {
@@ -164,12 +180,18 @@ public class TransferService {
         }
         return transferUsername;
     }
+    private HttpEntity<Transfer> makeAuthEntity(Transfer transfer) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(transfer, headers);
+    }
 
-            private HttpEntity<Void> makeAuthEntity () {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.setBearerAuth(token);
-                return new HttpEntity<>(headers);
+    private HttpEntity<Void> makeAuthEntity () {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(headers);
             }
 
 }

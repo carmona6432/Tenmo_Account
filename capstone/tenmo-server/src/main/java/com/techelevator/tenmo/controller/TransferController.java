@@ -49,9 +49,9 @@ public class TransferController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "transfers")
-    public Transfer createTransfer(@RequestBody Transfer transfer){
-       return transferDAO.createTransfer(transfer);
+    @PostMapping(path = "transfers/request")
+    public void createTransfer(@RequestBody Transfer transfer){
+       transferDAO.createTransfer(transfer);
     }
 
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
