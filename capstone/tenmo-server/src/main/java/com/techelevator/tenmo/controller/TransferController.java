@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
@@ -33,9 +34,10 @@ public class TransferController {
     public List<Transfer> getTransferToAccount (@PathVariable int id) {
         return transferDAO.getTransfersToAccount(id);
     }
-    @GetMapping(path = "transfers/pending/{id}")
-    public List<Transfer> getPendingTransfersById(@PathVariable int id){
-        return transferDAO.getPendingTransfersById(id);
+    @GetMapping(path = "transfers/pending")
+    public List<Transfer> getPendingTransfersById(Principal user){
+        String username = user.getName();
+        return transferDAO.getPendingTransfersById(username);
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers/send")
@@ -48,21 +50,16 @@ public class TransferController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers/request")
-    public void requestTransfer(@RequestBody Transfer transferRequest) {
-        transferDAO.createTransfer(transferRequest);
-    }
-    
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @PostMapping(path = "transfers")
-//    public Transfer createTransfer(@RequestBody Transfer transfer){
-//       return transferDAO.createTransfer(transfer);
-//    }
+    public void createTransfer(@RequestBody Transfer transfer){
+       transferDAO.createTransfer(transfer);}
+
 
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     @PutMapping(path = "transfers/{id}")
     public Transfer updateTransfer(@PathVariable int id, @RequestBody Transfer transfer){
         return transferDAO.updateTransfer(transfer);
     }
+
     @PreAuthorize("permitAll")
     @GetMapping(path="transferstatus/{id}")
     public String getTransferStatusById(@PathVariable int id) {

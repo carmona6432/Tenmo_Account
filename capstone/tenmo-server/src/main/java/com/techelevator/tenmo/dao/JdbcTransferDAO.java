@@ -81,15 +81,15 @@ public class JdbcTransferDAO implements TransferDAO {
         return transfer;
     }
     @Override
-    public List<Transfer> getPendingTransfersById(int userId) {
+    public List<Transfer> getPendingTransfersById(String username) {
             List<Transfer> pendingTransfers = new ArrayList<>();
-            String sql = "SELECT transfer_id, username, amount FROM transfer ts " +
+            String sql = "SELECT * FROM transfer ts " +
                     "JOIN account ac ON ac.account_id = ts.account_to " +
                     "JOIN tenmo_user tu ON tu.user_id = ac.user_id " +
-                    "WHERE account_from = ? " +
+                    "WHERE username = ? " +
                     "AND transfer_status_id = 1;";
             try {
-                SqlRowSet results = jdbcTemplate.queryForRowSet(sql,userId);
+                SqlRowSet results = jdbcTemplate.queryForRowSet(sql,username);
 
                 while (results.next()) {
                     pendingTransfers.add(mapRowWithUsername(results));
@@ -125,42 +125,12 @@ public class JdbcTransferDAO implements TransferDAO {
 
     @Override
     public void createTransfer (Transfer transfer){
-//        Transfer createTransfer = null;
         int transferId = 0;
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (?, ?, ?, ?, ?);";
         try {
             jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(),
                     transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
-        } catch (CannotGetJdbcConnectionException e) {
-            System.out.println("Connection Error");
-        } catch (DataIntegrityViolationException e) {
-            System.out.println("Data Problem");
-        }
-//        return getTransferByTransferId(transferId);
-    }
-    
-    @Override
-    public void sendTransfer (Transfer transfer) {
-        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                "VALUES (?, ?, ?, ?, ?);";
-        try {
-            jdbcTemplate.update(sql, transfer.getTransferTypeId(), transfer.getTransferStatusId(),
-                    transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
-        } catch (CannotGetJdbcConnectionException e) {
-            System.out.println("Connection Error");
-        } catch (DataIntegrityViolationException e) {
-            System.out.println("Data Problem");
-        }
-    }
-
-    @Override
-    public void sendRequest(Transfer transferRequest) {
-        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                "VALUES (?, ?, ?, ?, ?);";
-        try {
-            jdbcTemplate.update(sql, transferRequest.getTransferTypeId(), transferRequest.getTransferStatusId(),
-                    transferRequest.getAccountFrom(), transferRequest.getAccountTo(), transferRequest.getAmount());
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Connection Error");
         } catch (DataIntegrityViolationException e) {

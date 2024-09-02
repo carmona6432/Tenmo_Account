@@ -46,7 +46,7 @@ public class TransferService {
                     HttpMethod.POST,
                     makeAuthEntity(sent),
                     Transfer.class
-                    ).getBody();
+            ).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -54,7 +54,6 @@ public class TransferService {
         }
         return transfer;
     }
-
     public Transfer sendRequest(Transfer request) {
         Transfer transfer = null;
         try {
@@ -125,8 +124,6 @@ public class TransferService {
                     makeAuthEntity(),
                     List.class
                     ).getBody();
-
-
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -192,7 +189,7 @@ public class TransferService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);
         return new HttpEntity<>(headers);
+            }
     }
-
 }
 
