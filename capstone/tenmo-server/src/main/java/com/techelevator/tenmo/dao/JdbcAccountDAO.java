@@ -2,7 +2,6 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import javax.sql.RowSet;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +90,7 @@ public class JdbcAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void updateBalance(BigDecimal amount, int fromAccount, int toAccount) {
+    public void updateAccount(BigDecimal amount, int fromAccount, int toAccount) {
         String sql = "UPDATE account SET balance = balance - ? WHERE account_id = ?";
         String sql1 = "UPDATE account SET balance = balance + ? WHERE account_id = ?;";
         try{

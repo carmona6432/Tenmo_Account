@@ -12,7 +12,6 @@ public interface AccountDAO {
     Account getAccountByUserId(int userId);
     List<Account> getAccounts(String username);
     String getUsernameByUserId(int user_id);
-    void updateBalance(BigDecimal amount, int fromAccount, int toAccount);
+    void updateAccount(BigDecimal amount, int fromAccount, int toAccount);
     Account updateAccount(Account account);
-
 }
