@@ -202,10 +202,9 @@ public class App {
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
         transfer.setTransferStatusId(2);
-        transferService.sendTransfer(transfer);
 
         try {
-            transferService.createTransfer(transfer);
+            transferService.sendTransfer(transfer);
             System.out.println("Transfer request sent successfully.");
         } catch (Exception e) {
             System.out.println("Error creating transfer request: " + e.getMessage());
