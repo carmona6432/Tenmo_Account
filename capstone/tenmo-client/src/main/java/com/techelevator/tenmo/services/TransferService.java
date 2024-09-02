@@ -100,12 +100,12 @@ public class TransferService {
         return transferType;
     }
 
-    public List<Transfer> getPendingTransfersByUserId(int accountId) {
+    public List<Transfer> getPendingTransfersByUserId(int userId) {
         List<Transfer> transfers = new ArrayList<>();
         try {
             transfers = restTemplate.exchange(API_BASE_URL + "transfers/user/" +
-                            accountId +
-                            "/pending",
+                    userId +
+                    "/pending",
                     HttpMethod.GET,
                     makeAuthEntity(),
                     List.class
