@@ -1,9 +1,6 @@
 package com.techelevator.tenmo.services;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferStatus;
-import com.techelevator.tenmo.model.TransferType;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.model.login.AuthenticatedUser;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
@@ -94,6 +91,50 @@ public class TransferService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return transferType;
+    }
+    public Transfer[] getTransfersFromAccount(int id) {
+        Transfer[] transfer = null;
+        try {
+            transfer =  restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfer;
+    }
+
+    public Transfer[] getTransfersToAccount(int id){
+        Transfer[] transferUsername = null;
+        try {
+            transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/to/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferUsername;
+    }
+
+    public TransferUsername[] getPendingRequests(int id) {
+        TransferUsername[] transferUsername = null;
+        try {
+            transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    TransferUsername[].class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferUsername;
     }
     private HttpEntity<Transfer> makeAuthEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();

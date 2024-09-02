@@ -1,13 +1,9 @@
 package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDAO;
-import com.techelevator.tenmo.dao.TransferDAO;
-import com.techelevator.tenmo.dao.TransferStatusDAO;
-import com.techelevator.tenmo.dao.TransferTypeDAO;
 import com.techelevator.tenmo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
@@ -19,10 +15,6 @@ import java.util.List;
 public class AppController {
     @Autowired
     private AccountDAO accountDAO;
-    @Autowired
-    private TransferTypeDAO transferTypeDAO;
-    @Autowired
-    private TransferStatusDAO transferStatusDAO;
 
     @GetMapping(path = "/accounts")
     public Account getAccount(Principal user){
@@ -43,24 +35,7 @@ public class AppController {
      public void UpdateAccounts(BigDecimal amount, int fromAccount, int toAccount){
         accountDAO.updateAccount(amount,fromAccount,toAccount);
     }
-    @GetMapping(path="/transfertype/sort")
-    public TransferType getTransferTypeByDescription(@RequestParam String description) {
-       return transferTypeDAO.getTransferTypeByDescription(description);
-    }
-    @GetMapping(path="/transferstatus/sort")
-    public TransferStatus getTransferStatusByDescription(@RequestParam String description) {
-        return transferStatusDAO.getTransferStatusByDescription(description);
-    }
-    @PreAuthorize("permitAll")
-    @GetMapping(path="transferstatus/{id}")
-    public String getTransferStatusById(@PathVariable int id) {
-        return transferStatusDAO.getTransferStatusById(id);
-    }
-    @PreAuthorize("permitAll")
-    @GetMapping(path="transfertype/{id}")
-    public String getTransferTypeById(@PathVariable int id) {
-        return transferTypeDAO.getTransferTypeById(id);
-    }
+
     @PreAuthorize("permitAll")
     @GetMapping(path ="/username/{id}")
     public String getUsernameByUserId(@PathVariable int id){

@@ -24,20 +24,6 @@ public class AccountService {
     public void setToken(String token) {
         this.token = token;
     }
-    public BigDecimal getBalance() {
-        BigDecimal bigD = null;
-        try {
-            bigD =  restTemplate.exchange(API_BASE_URL + "balance",
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    BigDecimal.class).getBody();
-        } catch (ResourceAccessException e) {
-            System.out.println("Error in resource access: " + e.getMessage());
-        } catch (RestClientResponseException e) {
-            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
-        }
-        return bigD;
-    }
     public Account[] getAccounts() {
         Account[] accounts = new Account[0];
         try {
@@ -65,50 +51,6 @@ public class AccountService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return account;
-    }
-    public Transfer[] getTransfersFromAccount(int id) {
-        Transfer[] transfer = null;
-        try {
-            transfer =  restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
-                HttpMethod.GET,
-                makeAuthEntity(),
-                Transfer[].class).getBody();
-        } catch (ResourceAccessException e) {
-            System.out.println("Error in resource access: " + e.getMessage());
-        } catch (RestClientResponseException e) {
-            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
-        }
-        return transfer;
-    }
-
-    public Transfer[] getTransfersToAccount(int id){
-        Transfer[] transferUsername = null;
-        try {
-           transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/to/" + id,
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    Transfer[].class).getBody();
-        } catch (ResourceAccessException e) {
-            System.out.println("Error in resource access: " + e.getMessage());
-        } catch (RestClientResponseException e) {
-            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
-        }
-        return transferUsername;
-    }
-
-    public TransferUsername[] getPendingRequests(int id) {
-        TransferUsername[] transferUsername = null;
-        try {
-            transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    TransferUsername[].class).getBody();
-        } catch (ResourceAccessException e) {
-            System.out.println("Error in resource access: " + e.getMessage());
-        } catch (RestClientResponseException e) {
-            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
-        }
-        return transferUsername;
     }
 
     public Account getAccountByUserId(int userId) {
