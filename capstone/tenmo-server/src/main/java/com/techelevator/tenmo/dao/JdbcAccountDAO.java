@@ -92,7 +92,7 @@ public class JdbcAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void updateAccount(BigDecimal amount, int fromAccount, int toAccount) {
+    public void updateBalance(BigDecimal amount, int fromAccount, int toAccount) {
         String sql = "UPDATE account SET balance = balance - ? WHERE account_id = ?";
         String sql1 = "UPDATE account SET balance = balance + ? WHERE account_id = ?;";
         try{
@@ -118,7 +118,29 @@ public class JdbcAccountDAO implements AccountDAO {
         }
         return user;
     }
+    @Override
+    public Account updateAccount(Account account) {
+        Account updatedAcc = null;
+        String sql = "UPDATE account SET user_id = ?, balance = ?, username = ?, " +
+                "WHERE account_id = ?;";
 
+        try {
+            int numberOfRows = template.update(sql, account.getAccountId(), account.getUserId(),
+                    account.getBalance(), account.getUsername());
+
+            if (numberOfRows == 0) {
+                throw new DaoException("Zero rows affected, expected at least one");
+            } else {
+                updatedAcc = getAccountByAccountId(account.getAccountId());
+            }
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+        return updatedAcc;
+    }
 
     private Account mapRowToAccount (SqlRowSet sqlRowSet) {
         Account account = new Account();

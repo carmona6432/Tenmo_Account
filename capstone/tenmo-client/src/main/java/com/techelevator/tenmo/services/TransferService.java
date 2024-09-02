@@ -15,7 +15,7 @@ public class TransferService {
 
     private String token;
     private RestTemplate restTemplate = new RestTemplate();
-    private final String API_BASE_URL = "http://localhost:8080/";
+    private static String API_BASE_URL = "http://localhost:8080/";
 
     public void setToken(String token) {
         this.token = token;
@@ -100,12 +100,10 @@ public class TransferService {
         return transferType;
     }
 
-    public List<Transfer> getPendingTransfersByUserId(int userId) {
+    public List<Transfer> getPendingTransfersByUserId() {
         List<Transfer> transfers = new ArrayList<>();
         try {
-            transfers = restTemplate.exchange(API_BASE_URL + "transfers/user/" +
-                    userId +
-                    "/pending",
+            transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/",
                     HttpMethod.GET,
                     makeAuthEntity(),
                     List.class
@@ -150,19 +148,19 @@ public class TransferService {
         return transferUsername;
     }
 
-    public TransferUsername[] getPendingRequests(int id) {
-        TransferUsername[] transferUsername = null;
+    public List<Transfer> getPendingRequests(int id) {
+        List<Transfer> transfers = new ArrayList<>();
         try {
-            transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
+            transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    TransferUsername[].class).getBody();
+                    List.class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
-        return transferUsername;
+        return transfers;
     }
 
             private HttpEntity<Void> makeAuthEntity () {

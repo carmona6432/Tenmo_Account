@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -131,8 +132,9 @@ public class App {
 
 	private void viewPendingRequests() {
         int id = accountService.getAccount().getAccountId();
-        TransferUsername[] pendingRequests = transferService.getPendingRequests(id);
-        for(TransferUsername request : pendingRequests) {
+        List<Transfer> pendingRequests = new ArrayList<>();
+        pendingRequests = transferService.getPendingRequests(id);
+        for(Transfer request : pendingRequests) {
             System.out.println(consoleService.toString() + "\n" + request.getTransferId() + " " +
                     request.getUsername() +
                     " $" + request.getAmount() + "\n" + consoleService.toString());
@@ -216,7 +218,7 @@ public class App {
     }
     private void approveOrRejectTransfer() {
         viewPendingRequests();
-        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId(currentUser.getUser().getId());
+        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId();
 
         if (pendingTransfers.isEmpty()) {
             System.out.println("You have no pending transfer requests.");
