@@ -16,17 +16,20 @@ public class TransferService {
     private String token;
     private RestTemplate restTemplate = new RestTemplate();
     private final String API_BASE_URL = "http://localhost:8080/";
+
     public void setToken(String token) {
         this.token = token;
     }
-    public Transfer transferById(int id){
+
+    public Transfer getTransferById(int id) {
         Transfer transfer = null;
-        try{transfer = restTemplate.exchange(
-                API_BASE_URL + "transfers/" + id,
-                HttpMethod.GET,
-                makeAuthEntity(),
-                Transfer.class
-        ).getBody();
+        try {
+            transfer = restTemplate.exchange(
+                    API_BASE_URL + "transfers/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer.class
+            ).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -34,15 +37,16 @@ public class TransferService {
         }
         return transfer;
     }
+
     public Transfer sendTransfer(Transfer sent) {
         Transfer transfer = null;
         try {
             transfer = restTemplate.exchange(
-                    API_BASE_URL + "transfers",
+                    API_BASE_URL + "transfers/send",
                     HttpMethod.POST,
-                    makeAuthEntity(sent),
+                    makeAuthEntity(),
                     Transfer.class
-                    ).getBody();
+            ).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -50,14 +54,15 @@ public class TransferService {
         }
         return transfer;
     }
+
     public boolean updateTransfer(Transfer transfer) {
         boolean isUpdated = false;
         try {
             restTemplate.put(API_BASE_URL +
-                "transfers/" +
-                transfer.getId(),
-                makeAuthEntity(transfer));
-                isUpdated = true;
+                            "transfers/" +
+                            transfer.getId(),
+                    makeAuthEntity());
+            isUpdated = true;
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -65,6 +70,7 @@ public class TransferService {
         }
         return isUpdated;
     }
+
     public String getTransferStatusById(int transferStatusId) {
         String transferStatus = null;
         try {
@@ -79,6 +85,7 @@ public class TransferService {
 
         return transferStatus;
     }
+
     public String getTransferTypeById(int transferTypeId) {
         String transferType = null;
         try {
@@ -92,6 +99,27 @@ public class TransferService {
         }
         return transferType;
     }
+
+    public List<Transfer> getPendingTransfersByUserId(int userId) {
+        List<Transfer> transfers = new ArrayList<>();
+        try {
+            transfers = restTemplate.exchange(API_BASE_URL + "transfers/user/" +
+                    userId +
+                    "/pending",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    List.class
+                    ).getBody();
+
+
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfers;
+    }
+
     public Transfer[] getTransfersFromAccount(int id) {
         Transfer[] transfer = null;
         try {
@@ -136,17 +164,13 @@ public class TransferService {
         }
         return transferUsername;
     }
-    private HttpEntity<Transfer> makeAuthEntity(Transfer transfer) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(token);
-        return new HttpEntity<>(transfer, headers);
-    }
 
-    private HttpEntity<Void> makeAuthEntity() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(token);
-        return new HttpEntity<>(headers);
-    }
+            private HttpEntity<Void> makeAuthEntity () {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.setBearerAuth(token);
+                return new HttpEntity<>(headers);
+            }
+
 }
+

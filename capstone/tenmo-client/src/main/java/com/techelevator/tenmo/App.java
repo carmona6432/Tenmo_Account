@@ -123,7 +123,7 @@ public class App {
             }
         } else if (code == 3){
             int id = consoleService.promptForInt("Please enter transfer id: ");
-            Transfer transfer = transferService.transferById(id);
+            Transfer transfer = transferService.getTransferById(id);
             consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),accountService.getUsernameByAccountId(transfer.getAccountFrom()),accountService.getUsernameByAccountId(transfer.getAccountTo()),transfer.getAmount());
 
         }
@@ -174,9 +174,16 @@ public class App {
         transfer.setAccountFrom(accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId());
         transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
+<<<<<<< HEAD
         transfer.setTransferStatusId(2);
+        transferService.sendTransfer(transfer);
+//        Transfer sendTransfer = transferService.sendTransfer(transfer);
+//        consoleService.displayTransfer(sendTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
+=======
+        transfer.setTransferStatusId(1);
         Transfer createTransfer = transferService.sendTransfer(transfer);
         consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
+>>>>>>> a553925601768f8a52ec5ab83734197d43dce966
         }
 
 	private void requestBucks() {
@@ -211,25 +218,87 @@ public class App {
             transferService.sendTransfer(transfer);
             System.out.println("Transfer request sent successfully.");
         } catch (Exception e) {
-            System.out.println("Error creating transfer request: " + e.getMessage());
+            System.out.println("Error creating transfer request");
+        }
+    }
+    private void approveOrRejectTransfer() {
+        viewPendingRequests();
+        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId(currentUser.getUser().getId());
+
+        if (pendingTransfers.isEmpty()) {
+            System.out.println("You have no pending transfer requests.");
+            return;
+        }
+
+        for (Transfer transfer : pendingTransfers) {
+            System.out.println("Transfer ID: " + transfer.getTransferId() +
+                    " | From: " + accountService.getUsernameByAccountId(transfer.getAccountFrom()) +
+                    " | Amount: $" + transfer.getAmount());
+        }
+
+        int transferId = consoleService.promptForInt("Enter transfer ID to approve/reject (0 to cancel): ");
+        if (transferId == 0) {
+            return;
+        }
+
+        Transfer selectedTransfer = transferService.getTransferById(transferId);
+        if (selectedTransfer == null || selectedTransfer.getAccountTo() != accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId()) {
+            System.out.println("Invalid transfer ID.");
+            return;
+        }
+
+        System.out.println("\n1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject");
+        System.out.println("---------");
+        int choice = consoleService.promptForInt("Please choose an option: ");
+
+        if (choice == 1) {
+            approveTransfer(selectedTransfer);
+        } else if (choice == 2) {
+            rejectTransfer(selectedTransfer);
+        } else if (choice == 0) {
+            System.out.println("No action taken.");
+        } else {
+            System.out.println("Invalid option. No action taken.");
         }
     }
 
-    //The following method can be called to make a log of a transfer
-    private void logChange(String action, double amount, double newBalance) {
-        // Establish date and time
-        LocalDateTime now = LocalDateTime.now();
-        // Format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
-        // Combine
-        String timeStamp = now.format(formatter);
-        // Log entry variable
-        String logEntry = String.format("%s %s: $%.2f $%.2f\n", timeStamp, action, amount, newBalance);
+    private void approveTransfer(Transfer transfer) {
+        Account senderAccount = accountService.getAccountByAccountId(transfer.getAccountTo());
+        if (senderAccount.getBalance().compareTo(transfer.getAmount()) < 0) {
+            System.out.println("Insufficient funds to approve this transfer.");
+            return;
+        }
 
-        try (PrintWriter output = new PrintWriter(new FileWriter(LOG_FILE, true))){
-            output.print(logEntry);
-        } catch (IOException e) {
-            System.out.println("Error in log file creation.");
+        transfer.setTransferStatusId(2);
+        Account recipientAccount = accountService.getAccountByAccountId(transfer.getAccountFrom());
+
+        BigDecimal senderNewBalance = senderAccount.getBalance().subtract(transfer.getAmount());
+        BigDecimal recipientNewBalance = recipientAccount.getBalance().add(transfer.getAmount());
+
+        senderAccount.setBalance(senderNewBalance);
+        recipientAccount.setBalance(recipientNewBalance);
+
+        accountService.updateAccount(senderAccount);
+        accountService.updateAccount(recipientAccount);
+
+        updateTransferStatus(transfer);
+        System.out.println("Transfer approved successfully.");
+    }
+
+    private void rejectTransfer(Transfer transfer) {
+        transfer.setTransferStatusId(3);
+        updateTransferStatus(transfer);
+        System.out.println("Transfer rejected.");
+    }
+
+    private void updateTransferStatus(Transfer transfer) {
+        try {
+            transferService.updateTransfer(transfer);
+        } catch (Exception e) {
+            System.out.println("Error updating transfer");
         }
     }
+
 }
