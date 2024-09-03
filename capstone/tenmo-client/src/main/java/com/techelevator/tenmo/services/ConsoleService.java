@@ -87,9 +87,6 @@ public class ConsoleService {
    public void displayUsersFrame(){
        System.out.println(toString() + "\n" + "Users\n" + "ID          Name\n" + toString());
    }
-   public void displayPendingTransaction(){
-        System.out.println(toString() + "\n" + "Pending\n" + "ID          Name\n" + toString());
-   }
 
    public String toString(){
         String frame = "-------------------------------------------";
