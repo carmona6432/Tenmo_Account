@@ -131,9 +131,17 @@ public class App {
     }
 
 	private void viewPendingRequests() {
-        int code = consoleService.promptForInt(consoleService.toString() + "\n1. View Pending Transfer" + "\n" + "2. Accept Pending Transfer" + "\n" + "3.Reject Pending Transfer" + "\n" + consoleService.toString() + "\n");
-        if(code == 1) {
+        System.out.println("-------------------------------------------\n" +
+                "Pending Transfers\n" +
+                "ID          To                     Amount\n" +
+                "-------------------------------------------\n");
+        for (Transfer request : transferService.getPendingTransfers()) {
+            System.out.println(request.getId() + "        " + request.getUsername() + "                " + request.getAmount());
         }
+        System.out.println("-------------------------------------------\n");
+        int code = consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel): ");
+//        int code = consoleService.promptForInt(consoleService.toString() + "\n1. View Pending Transfer" + "\n" + "2. Accept Pending Transfer" + "\n" + "3.Reject Pending Transfer" + "\n" + consoleService.toString() + "\n");
+//        if(code == 1)
 //        int id = accountService.getAccount().getAccountId();
 //        Transfer[] pendingRequests = transferService.getPendingRequests(id);
 //        for(Transfer request : pendingRequests) {
@@ -223,7 +231,7 @@ public class App {
     }
     private void approveOrRejectTransfer() {
         viewPendingRequests();
-        List<Transfer> pendingTransfers = transferService.getPendingTransfersByUserId();
+        List<Transfer> pendingTransfers = transferService.getPendingTransfers();
 
         if (pendingTransfers.isEmpty()) {
             System.out.println("You have no pending transfer requests.");

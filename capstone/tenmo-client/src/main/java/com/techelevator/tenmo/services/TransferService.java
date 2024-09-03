@@ -116,7 +116,7 @@ public class TransferService {
         return transferType;
     }
 
-    public List<Transfer> getPendingTransfersByUserId() {
+    public List<Transfer> getPendingTransfers() {
         List<Transfer> transfers = new ArrayList<>();
         try {
             transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/",
@@ -191,5 +191,4 @@ public class TransferService {
         return new HttpEntity<>(headers);
             }
     }
-}
 
