@@ -171,7 +171,20 @@ public class TransferService {
         }
         return transferUsername;
     }
-
+    public List<Transfer> getPendingRequests(int id) {
+        List<Transfer> transfers = new ArrayList<>();
+        try {
+            transfers = restTemplate.exchange(API_BASE_URL + "pending/" + id,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    ArrayList.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transfers;
+    }
     private HttpEntity<Transfer> makeAuthEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
