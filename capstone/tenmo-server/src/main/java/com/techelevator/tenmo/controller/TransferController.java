@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.security.Principal;
 import java.util.List;
 
@@ -21,8 +22,9 @@ public class TransferController {
         this.transferDAO = transferDAO;
         this.accountDAO = accountDAO;
     }
-    @GetMapping(path = "transfers/{id}")
-    public Transfer getTransferByTransferId(int transferId){
+    @PreAuthorize("permitAll")
+    @GetMapping(path = "transfers/{transferId}")
+    public Transfer getTransferByTransferId(@PathVariable int transferId){
         return transferDAO.getTransferByTransferId(transferId);
     }
 
@@ -34,11 +36,13 @@ public class TransferController {
     public List<Transfer> getTransferToAccount (@PathVariable int id) {
         return transferDAO.getTransfersToAccount(id);
     }
-    @GetMapping(path = "transfers/pending")
-    public List<Transfer> getPendingTransfersById(Principal user){
-        String username = user.getName();
-        return transferDAO.getPendingTransfersById(username);
+    
+    @PreAuthorize("permitAll")
+    @GetMapping(path = "transfers/pending/{accountFrom}")
+    public List<Transfer> getPendingTransfers(@PathVariable int accountFrom){
+        return transferDAO.getPendingTransfers(accountFrom);
     }
+    
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers/send")
     public void sendTransfer(@RequestBody Transfer transfer) {
@@ -69,5 +73,10 @@ public class TransferController {
     @GetMapping(path="transfertype/{id}")
     public String getTransferTypeById(@PathVariable int id) {
         return transferDAO.getTransferTypeById(id);
+    }
+    @PreAuthorize("permitAll")
+    @GetMapping(path = "transferId")
+    public int getTransferIdLimitOne(){
+        return transferDAO.getTransferIdLimitOne();
     }
 }
