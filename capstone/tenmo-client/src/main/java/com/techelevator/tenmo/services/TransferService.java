@@ -181,7 +181,7 @@ public class TransferService {
             transfers = restTemplate.exchange(API_BASE_URL + "pending/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    List.class).getBody();
+                    ArrayList.class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
