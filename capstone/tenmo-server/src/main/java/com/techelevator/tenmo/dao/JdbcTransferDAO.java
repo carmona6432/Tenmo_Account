@@ -81,18 +81,16 @@ public class JdbcTransferDAO implements TransferDAO {
         return transfer;
     }
     @Override
-    public List<Transfer> getPendingTransfersById(String username) {
+    public List<Transfer> getPendingTransfersById(Integer accountFrom) {
             List<Transfer> pendingTransfers = new ArrayList<>();
-            String sql = "SELECT ts.transfer_id,ts.transfer_type_id, ts.transfer_status_id, ts.account_from, ts.account_to, ts.amount FROM transfer ts " +
-                    "JOIN account ac ON ac.account_id = ts.account_to " +
-                    "JOIN tenmo_user tu ON tu.user_id = ac.user_id " +
-                    "WHERE username = ? " +
+            String sql = "SELECT * FROM transfer " +
+                    "WHERE account_from = ? " +
                     "AND transfer_status_id = 1;";
             try {
-                SqlRowSet results = jdbcTemplate.queryForRowSet(sql,username);
+                SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountFrom);
 
                 while (results.next()) {
-                    pendingTransfers.add(mapRowWithUsername(results));
+                    pendingTransfers.add(mapRowToTransfer(results));
                 }
             } catch (CannotGetJdbcConnectionException e) {
                 System.out.println("Problem connecting");
@@ -124,7 +122,7 @@ public class JdbcTransferDAO implements TransferDAO {
         }
 
     @Override
-    public void createTransfer (Transfer transfer){
+    public void createTransfer (Transfer transfer) {
         int transferId = 0;
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (?, ?, ?, ?, ?);";
@@ -136,6 +134,17 @@ public class JdbcTransferDAO implements TransferDAO {
         } catch (DataIntegrityViolationException e) {
             System.out.println("Data Problem");
         }
+    }
+    @Override
+    public int getTransferIdLimitOne() {
+        int transferId = 0;
+        String query = "select transfer_id from transfer " +
+                "order by transfer_id desc limit 1;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(query);
+        if (result.next()) {
+            transferId = result.getInt("transfer_id");
+        }
+        return transferId;
     }
 
     @Override

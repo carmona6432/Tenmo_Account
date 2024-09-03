@@ -195,12 +195,9 @@ public class App {
         transfer.setAmount(amount);
         transfer.setTransferStatusId(2);
         transfer.setTransferStatusId(1);
-        int g = transfer.getTransferId();
         transferService.sendTransfer(transfer);
 
-        consoleService.displayTransfer(g,transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
-//        Transfer createTransfer = transferService.sendTransfer(transfer);
-//        consoleService.displayTransfer(createTransfer.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
+        consoleService.displayTransfer(transferService.getTransferId(),transferService.getTransferTypeById(2), transferService.getTransferStatusById(2),currentUser.getUser().getUsername(),accountService.getUsernameByAccountId(userId),amount);
         }
 
 	private void requestBucks() {

@@ -34,10 +34,9 @@ public class TransferController {
     public List<Transfer> getTransferToAccount (@PathVariable int id) {
         return transferDAO.getTransfersToAccount(id);
     }
-    @GetMapping(path = "transfers/pending")
-    public List<Transfer> getPendingTransfersById(Principal user){
-        String username = user.getName();
-        return transferDAO.getPendingTransfersById(username);
+    @GetMapping(path = "pending/{accountFrom}")
+    public List<Transfer> getPendingTransfersById(Integer accountFrom){
+        return transferDAO.getPendingTransfersById(accountFrom);
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "transfers/send")
@@ -69,5 +68,10 @@ public class TransferController {
     @GetMapping(path="transfertype/{id}")
     public String getTransferTypeById(@PathVariable int id) {
         return transferDAO.getTransferTypeById(id);
+    }
+    @PreAuthorize("permitAll")
+    @GetMapping(path = "transferId")
+    public int getTransferIdLimitOne(){
+        return transferDAO.getTransferIdLimitOne();
     }
 }

@@ -115,6 +115,19 @@ public class TransferService {
         }
         return transferType;
     }
+    public int getTransferId() {
+        int transferId = 0;
+        try {
+            String url = API_BASE_URL + "/transferId/";
+            transferId = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
+                    int.class).getBody();
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return transferId;
+    }
 
     public List<Transfer> getPendingTransfersByUserId() {
         List<Transfer> transfers = new ArrayList<>();
@@ -165,7 +178,7 @@ public class TransferService {
     public List<Transfer> getPendingRequests(int id) {
         List<Transfer> transfers = new ArrayList<>();
         try {
-            transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + id,
+            transfers = restTemplate.exchange(API_BASE_URL + "pending/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     List.class).getBody();
