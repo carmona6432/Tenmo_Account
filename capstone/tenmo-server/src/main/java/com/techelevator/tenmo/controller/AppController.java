@@ -26,6 +26,11 @@ public class AppController {
     public Account getAccountByUserId(@PathVariable int userId) {
         return accountDAO.getAccountByUserId(userId);
     }
+    @PreAuthorize("permitAll")
+    @GetMapping(path = "accounts/user/{accountId}")
+    public Account getAccountByAccountId(@PathVariable int accountId){
+        return accountDAO.getAccountByAccountId(accountId);
+    }
 
     @GetMapping(path = "accounts/users")
     public List<Account> accounts(Principal user) {

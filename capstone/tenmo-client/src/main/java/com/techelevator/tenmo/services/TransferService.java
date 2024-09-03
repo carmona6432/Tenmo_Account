@@ -21,7 +21,7 @@ public class TransferService {
         this.token = token;
     }
 
-    public Transfer getTransferById(int id) {
+    public Transfer getTransferByTransferId(int id) {
         Transfer transfer = null;
         try {
             transfer = restTemplate.exchange(
@@ -127,22 +127,6 @@ public class TransferService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return transferId;
-    }
-
-    public List<Transfer> getPendingTransfersByUserId() {
-        List<Transfer> transfers = new ArrayList<>();
-        try {
-            transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/",
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    List.class
-                    ).getBody();
-        } catch (ResourceAccessException e) {
-            System.out.println("Error in resource access: " + e.getMessage());
-        } catch (RestClientResponseException e) {
-            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
-        }
-        return transfers;
     }
 
     public Transfer[] getTransfersFromAccount(int id) {

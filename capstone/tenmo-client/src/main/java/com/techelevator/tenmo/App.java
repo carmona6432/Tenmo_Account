@@ -124,7 +124,7 @@ public class App {
             }
         } else if (code == 3){
             int id = consoleService.promptForInt("Please enter transfer id: ");
-            Transfer transfer = transferService.getTransferById(id);
+            Transfer transfer = transferService.getTransferByTransferId(id);
             consoleService.displayTransfer(transfer.getTransferId(), transferService.getTransferTypeById(transfer.getTransferTypeId()),transferService.getTransferStatusById(transfer.getTransferStatusId()),accountService.getUsernameByAccountId(transfer.getAccountFrom()),accountService.getUsernameByAccountId(transfer.getAccountTo()),transfer.getAmount());
 
         }
@@ -229,7 +229,7 @@ public class App {
         if (transferId == 0) {
             return;
         }
-        Transfer selectedTransfer = transferService.getTransferById(transferId);
+        Transfer selectedTransfer = transferService.getTransferByTransferId(transferId);
         if (selectedTransfer == null || selectedTransfer.getAccountTo() != accountService.getAccountByUserId(currentUser.getUser().getId()).getAccountId()) {
             System.out.println("Invalid transfer ID.");
             return;
@@ -254,7 +254,7 @@ public class App {
     }
 
     private void approveTransfer(Transfer transfer) {
-        Account senderAccount = accountService.getAccountByAccountId(transfer.getAccountTo());
+        Account senderAccount = accountService.getAccountByUserId(transfer.getAccountTo());
         if (senderAccount.getBalance().compareTo(transfer.getAmount()) < 0) {
             System.out.println("Insufficient funds to approve this transfer.");
             return;

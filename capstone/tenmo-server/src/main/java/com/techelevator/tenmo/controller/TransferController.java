@@ -16,6 +16,7 @@ import java.util.List;
 public class TransferController {
     @Autowired
     private TransferDAO transferDAO;
+    @Autowired
     private AccountDAO accountDAO;
     public TransferController(TransferDAO transferDAO, AccountDAO accountDAO){
         this.transferDAO = transferDAO;
@@ -34,6 +35,7 @@ public class TransferController {
     public List<Transfer> getTransferToAccount (@PathVariable int id) {
         return transferDAO.getTransfersToAccount(id);
     }
+    @PreAuthorize("permitAll")
     @GetMapping(path = "pending/{accountFrom}")
     public List<Transfer> getPendingTransfersById(Integer accountFrom){
         return transferDAO.getPendingTransfersById(accountFrom);
