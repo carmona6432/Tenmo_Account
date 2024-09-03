@@ -2,8 +2,6 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferUsername;
-import com.techelevator.tenmo.model.login.AuthenticatedUser;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,8 +11,6 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AccountService {
 
@@ -67,20 +63,31 @@ public class AccountService {
         }
         return account;
     }
-    public boolean updateAccount(Account updatedAccount) {
-        RestTemplate restTemplate = new RestTemplate();
-
+    public boolean updateFromAccount(Account updatedAccount) {
+        boolean isUpdated = false;
         try {
-            restTemplate.put(API_BASE_URL + "accounts/" + updatedAccount.getAccountId(),
-                    makeAuthEntity(),
-                    Account.class);
-            return true;
+            restTemplate.put(API_BASE_URL + "transfer/fromAccount/" + updatedAccount.getAccountId(),
+                    makeAuthEntity(updatedAccount));
+            isUpdated = true;
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
-        return false;
+        return isUpdated;
+    }
+    public boolean updateToAccount(Account updatedAccount) {
+        boolean isUpdated = false;
+        try {
+            restTemplate.put(API_BASE_URL + "transfer/toAccount/" + updatedAccount.getAccountId(),
+                    makeAuthEntity(updatedAccount));
+            isUpdated = true;
+        } catch (ResourceAccessException e) {
+            System.out.println("Error in resource access: " + e.getMessage());
+        } catch (RestClientResponseException e) {
+            System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
+        }
+        return isUpdated;
     }
     public Account getAccountByUserId(int userId) {
 
@@ -111,6 +118,12 @@ public class AccountService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return account;
+    }
+    private HttpEntity<Account> makeAuthEntity(Account account) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        return new HttpEntity<>(account, headers);
     }
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();

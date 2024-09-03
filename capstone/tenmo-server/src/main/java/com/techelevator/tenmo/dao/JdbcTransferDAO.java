@@ -21,14 +21,14 @@ public class JdbcTransferDAO implements TransferDAO {
     public List<Transfer> getTransfersFromAccount(int accountId) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "select transfer.transfer_id, transfer.transfer_type_id, transfer.transfer_status_id, " +
-                "tenmo_user.username, transfer.amount from transfer " +
+                "transfer.account_from, transfer.account_to, transfer.amount from transfer " +
                 "JOIN account ON transfer.account_to = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "where transfer_type_id = 2 and account_from =;";
+                "where account_from = ?;";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
             while (results.next()) {
-                transfers.add(mapRowWithUsername(results));
+                transfers.add(mapRowToTransfer(results));
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
@@ -42,15 +42,15 @@ public class JdbcTransferDAO implements TransferDAO {
     public List<Transfer> getTransfersToAccount(int accountId) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "select transfer.transfer_id, transfer.transfer_type_id, transfer.transfer_status_id, " +
-                "tenmo_user.username, transfer.amount from transfer " +
+                "transfer.account_from, transfer.account_to,transfer.amount from transfer " +
                 "JOIN account ON transfer.account_from = account.account_id " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "where transfer_type_id = 2 and account_to = ?";
+                "where account_to = ?";
         ;
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
             while (results.next()) {
-                transfers.add(mapRowWithUsername(results));
+                transfers.add(mapRowToTransfer(results));
             }
         } catch (CannotGetJdbcConnectionException e) {
             System.out.println("Problem connecting");
@@ -81,7 +81,7 @@ public class JdbcTransferDAO implements TransferDAO {
         return transfer;
     }
     @Override
-    public List<Transfer> getPendingTransfersById(Integer accountFrom) {
+    public List<Transfer> getPendingTransfers(int accountFrom) {
             List<Transfer> pendingTransfers = new ArrayList<>();
             String sql = "SELECT * FROM transfer " +
                     "WHERE account_from = ? " +
@@ -103,10 +103,10 @@ public class JdbcTransferDAO implements TransferDAO {
         @Override
         public Transfer updateTransfer (Transfer transfer){
         Transfer updateTransfer = null;
-            String sql = "UPDATE transfers " +
-                    "SET transfer_status_id = ?" +
+            String sql = "UPDATE transfer " +
+                    "SET transfer_status_id = ? " +
                     "WHERE transfer_id = ?;";
-            int numOfRows =jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getId());
+            int numOfRows =jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getTransferId());
             try {
                 if (numOfRows == 1) {
                     updateTransfer = getTransferByTransferId(transfer.getTransferId());
@@ -172,21 +172,12 @@ public class JdbcTransferDAO implements TransferDAO {
 
         private Transfer mapRowToTransfer (SqlRowSet sqlRowSet){
             Transfer transfer = new Transfer();
-            transfer.setId(sqlRowSet.getInt("transfer_id"));
+            transfer.setTransferId(sqlRowSet.getInt("transfer_id"));
             transfer.setTransferTypeId(sqlRowSet.getInt("transfer_type_id"));
             transfer.setTransferStatusId(sqlRowSet.getInt("transfer_status_id"));
             transfer.setAccountFrom(sqlRowSet.getInt("account_from"));
             transfer.setAccountTo(sqlRowSet.getInt("account_to"));
             transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
-            return transfer;
-        }
-        private Transfer mapRowWithUsername(SqlRowSet sqlRowSet){
-            Transfer transfer = new Transfer();
-            transfer.setId(sqlRowSet.getInt("transfer_id"));
-            transfer.setTransferTypeId(sqlRowSet.getInt("transfer_type_id"));
-            transfer.setTransferStatusId(sqlRowSet.getInt("transfer_status_id"));
-            transfer.setAmount(sqlRowSet.getBigDecimal("amount"));
-            transfer.setUsername(sqlRowSet.getString("username"));
             return transfer;
         }
     }
