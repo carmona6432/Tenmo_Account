@@ -21,11 +21,11 @@ public class TransferService {
         this.token = token;
     }
 
-    public Transfer getTransferById(int id) {
+    public Transfer getTransferByTransferId(int transferId) {
         Transfer transfer = null;
         try {
             transfer = restTemplate.exchange(
-                    API_BASE_URL + "transfers/" + id,
+                    API_BASE_URL + "transfers/" + transferId,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer.class
@@ -54,6 +54,7 @@ public class TransferService {
         }
         return transfer;
     }
+
     public Transfer sendRequest(Transfer request) {
         Transfer transfer = null;
         try {
@@ -69,7 +70,7 @@ public class TransferService {
             System.out.println("API error - status code: " + e.getRawStatusCode() + ", Error message: " + e.getMessage());
         }
         return transfer;
-    }    
+    }
 
     public boolean updateTransfer(Transfer transfer) {
         boolean isUpdated = false;
@@ -115,6 +116,7 @@ public class TransferService {
         }
         return transferType;
     }
+
     public int getTransferId() {
         int transferId = 0;
         try {
@@ -129,14 +131,13 @@ public class TransferService {
         return transferId;
     }
 
-    public List<Transfer> getPendingTransfersByUserId() {
-        List<Transfer> transfers = new ArrayList<>();
+    public Transfer[] getPendingTransfers(int accountFrom) {
+        Transfer[] transfers = new Transfer[0];
         try {
-            transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/",
+            transfers = restTemplate.exchange(API_BASE_URL + "transfers/pending/" +accountFrom,
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    List.class
-                    ).getBody();
+                    Transfer[].class).getBody();
         } catch (ResourceAccessException e) {
             System.out.println("Error in resource access: " + e.getMessage());
         } catch (RestClientResponseException e) {
@@ -148,7 +149,7 @@ public class TransferService {
     public Transfer[] getTransfersFromAccount(int id) {
         Transfer[] transfer = null;
         try {
-            transfer =  restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
+            transfer = restTemplate.exchange(API_BASE_URL + "transfers/from/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
@@ -160,7 +161,7 @@ public class TransferService {
         return transfer;
     }
 
-    public Transfer[] getTransfersToAccount(int id){
+    public Transfer[] getTransfersToAccount(int id) {
         Transfer[] transferUsername = null;
         try {
             transferUsername = restTemplate.exchange(API_BASE_URL + "transfers/to/" + id,
@@ -197,7 +198,7 @@ public class TransferService {
         return new HttpEntity<>(transfer, headers);
     }
 
-    private HttpEntity<Void> makeAuthEntity () {
+    private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);

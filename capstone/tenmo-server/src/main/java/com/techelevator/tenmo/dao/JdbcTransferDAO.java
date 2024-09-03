@@ -81,7 +81,7 @@ public class JdbcTransferDAO implements TransferDAO {
         return transfer;
     }
     @Override
-    public List<Transfer> getPendingTransfersById(Integer accountFrom) {
+    public List<Transfer> getPendingTransfers(int accountFrom) {
             List<Transfer> pendingTransfers = new ArrayList<>();
             String sql = "SELECT * FROM transfer " +
                     "WHERE account_from = ? " +
